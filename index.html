@@ -1223,6 +1223,234 @@
       font-weight: 700;
     }
 
+    .shop-section {
+      display: grid;
+      gap: 16px;
+    }
+
+    .shop-columns {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .shop-column {
+      display: grid;
+      gap: 12px;
+    }
+
+    .shop-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .shop-card {
+      padding: 16px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 252, 255, 0.98) 100%);
+      border: 2px solid rgba(91, 141, 239, 0.12);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: 10px;
+    }
+
+    .shop-card.owned {
+      border-color: rgba(73, 220, 177, 0.34);
+    }
+
+    .shop-card.equipped {
+      border-color: rgba(255, 183, 3, 0.36);
+      background: linear-gradient(180deg, rgba(255, 252, 241, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%);
+    }
+
+    .shop-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .shop-item-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .shop-item-emoji {
+      font-size: 26px;
+    }
+
+    .shop-meta {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .shop-tag-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .shop-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(32, 50, 77, 0.08);
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .arena-card {
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.92), transparent 24%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 251, 255, 0.98) 100%);
+    }
+
+    .arena-status-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .arena-stage {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .arena-fighter {
+      padding: 20px;
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(247, 251, 255, 0.98) 100%);
+      border: 2px solid rgba(91, 141, 239, 0.14);
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+    }
+
+    .arena-fighter.current-turn {
+      border-color: rgba(255, 183, 3, 0.38);
+      transform: translateY(-2px);
+    }
+
+    .arena-fighter-emoji {
+      font-size: clamp(58px, 8vw, 84px);
+      line-height: 1;
+      display: block;
+    }
+
+    .arena-name {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .arena-loadout {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .arena-form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .arena-input-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .arena-field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .arena-field label {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    .arena-field input,
+    .arena-field select {
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 2px solid rgba(91, 141, 239, 0.16);
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--ink);
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .arena-choice-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .arena-choice-card {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 2px solid rgba(91, 141, 239, 0.12);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: 12px;
+    }
+
+    .arena-choice-card h3 {
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .arena-choice-buttons {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .arena-choice-btn {
+      min-height: 72px;
+      border-radius: 22px;
+      font-size: 16px;
+      line-height: 1.2;
+      background: linear-gradient(180deg, #ffffff 0%, #eef7ff 100%);
+      color: var(--ink);
+      border: 2px solid rgba(91, 141, 239, 0.16);
+    }
+
+    .arena-choice-btn.selected {
+      background: linear-gradient(180deg, #fff7dd 0%, #ffe8a3 100%);
+      border-color: rgba(255, 183, 3, 0.42);
+      color: #8f5a00;
+    }
+
+    .arena-round-log {
+      display: grid;
+      gap: 10px;
+    }
+
+    .arena-log-item {
+      padding: 14px 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 2px solid rgba(91, 141, 239, 0.12);
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -1387,6 +1615,11 @@
         min-height: 92px;
       }
 
+      .arena-stage,
+      .arena-choice-grid {
+        grid-template-columns: 1fr;
+      }
+
       .topbar {
         margin-bottom: 14px;
       }
@@ -1501,7 +1734,7 @@
             <button class="mode-card" data-mode="letters" data-game="battle">
               <div class="mode-icon">🔤</div>
               <h3>Буквы</h3>
-              <p>Ищем буквы и узнаём, с какой буквы начинается слово.</p>
+              <p>Ищем буквы, слоги и постепенно переходим к первым коротким словам.</p>
               <div class="mode-chip-row">
                 <span class="chip">5 заданий</span>
                 <span class="chip success">Уровень <span id="letters-level-chip">1</span></span>
@@ -1511,7 +1744,7 @@
             <button class="mode-card" data-mode="numbers" data-game="battle">
               <div class="mode-icon">🔢</div>
               <h3>Цифры</h3>
-              <p>Находим цифры и считаем предметы: яблоки, звёзды, игрушки и конфеты.</p>
+              <p>Находим числа до 20, считаем предметы и решаем первые простые примеры.</p>
               <div class="mode-chip-row">
                 <span class="chip">5 заданий</span>
                 <span class="chip success">Уровень <span id="numbers-level-chip">1</span></span>
@@ -1521,7 +1754,7 @@
             <button class="mode-card" data-mode="mixed" data-game="battle">
               <div class="mode-icon">🌈</div>
               <h3>Смешанный режим</h3>
-              <p>Буквы, цифры, счёт и слова в одном весёлом приключении.</p>
+              <p>Буквы, числа, чтение, счёт и первые арифметические задания в одном режиме.</p>
               <div class="mode-chip-row">
                 <span class="chip">5 заданий</span>
                 <span class="chip success">Уровень <span id="mixed-level-chip">1</span></span>
@@ -1535,6 +1768,16 @@
               <div class="mode-chip-row">
                 <span class="chip warning">6–7 вопросов</span>
                 <span class="chip success">Трасса <span id="race-level-chip">1</span></span>
+              </div>
+            </button>
+
+            <button class="mode-card" data-mode="arena" data-game="pvp">
+              <div class="mode-icon">🥊</div>
+              <h3>Арена PvP</h3>
+              <p>Два игрока по очереди тайно выбирают удар и защиту. Очки из учёбы открывают лучшее снаряжение.</p>
+              <div class="mode-chip-row">
+                <span class="chip warning">Локально на одном устройстве</span>
+                <span class="chip success">Магазин в статистике</span>
               </div>
             </button>
           </div>
@@ -1680,6 +1923,130 @@
         </div>
       </section>
 
+      <section id="pvp-screen" class="screen">
+        <div class="stack-lg">
+          <div class="card arena-card">
+            <div class="arena-status-grid">
+              <div class="status-tile">
+                <strong>Арена</strong>
+                <span id="arenaRoundLabel">Раунд 1</span>
+              </div>
+              <div class="status-tile">
+                <strong>Монеты</strong>
+                <span id="arenaCoinsLabel">0</span>
+              </div>
+              <div class="status-tile">
+                <strong>Таймер</strong>
+                <span id="arenaTimerLabel">7</span>
+              </div>
+              <div class="status-tile">
+                <strong>Ход</strong>
+                <span id="arenaTurnLabel">Игрок 1</span>
+              </div>
+            </div>
+
+            <div class="arena-stage">
+              <div id="arena-fighter-0" class="arena-fighter">
+                <span class="arena-fighter-emoji">🦸‍♂️</span>
+                <div id="arenaName0" class="arena-name">Игрок 1</div>
+                <div id="arenaLoadout0" class="arena-loadout">👊 Кулаки · 🪖 Без шлема · 🦺 Без доспеха</div>
+                <div class="hp-top">
+                  <span>Здоровье</span>
+                  <span id="arenaHpText0">100 / 100</span>
+                </div>
+                <div class="hp-bar">
+                  <span id="arenaHpFill0" class="hp-fill"></span>
+                </div>
+              </div>
+
+              <div id="arena-fighter-1" class="arena-fighter">
+                <span class="arena-fighter-emoji">🧒</span>
+                <div id="arenaName1" class="arena-name">Игрок 2</div>
+                <div id="arenaLoadout1" class="arena-loadout">👊 Кулаки · 🪖 Без шлема · 🦺 Без доспеха</div>
+                <div class="hp-top">
+                  <span>Здоровье</span>
+                  <span id="arenaHpText1">100 / 100</span>
+                </div>
+                <div class="hp-bar">
+                  <span id="arenaHpFill1" class="hp-fill monster"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card question-card">
+            <p class="question-label">Локальный мультиплеер</p>
+            <h2 id="arenaPromptTitle" class="question-title">Подготовь игроков к бою</h2>
+            <p id="arenaPromptText" class="section-text">Сначала выберите имена и снаряжение из купленных предметов.</p>
+
+            <div id="arenaSetupPanel" class="arena-form">
+              <div class="arena-input-grid">
+                <div class="arena-field">
+                  <label for="arenaNameInput0">Имя игрока 1</label>
+                  <input id="arenaNameInput0" type="text" maxlength="16" value="Игрок 1" />
+                </div>
+                <div class="arena-field">
+                  <label for="arenaNameInput1">Имя игрока 2</label>
+                  <input id="arenaNameInput1" type="text" maxlength="16" value="Игрок 2" />
+                </div>
+              </div>
+
+              <div class="arena-input-grid">
+                <div class="arena-field">
+                  <label for="arenaWeaponSelect0">Оружие игрока 1</label>
+                  <select id="arenaWeaponSelect0"></select>
+                </div>
+                <div class="arena-field">
+                  <label for="arenaWeaponSelect1">Оружие игрока 2</label>
+                  <select id="arenaWeaponSelect1"></select>
+                </div>
+                <div class="arena-field">
+                  <label for="arenaHelmetSelect0">Шлем игрока 1</label>
+                  <select id="arenaHelmetSelect0"></select>
+                </div>
+                <div class="arena-field">
+                  <label for="arenaHelmetSelect1">Шлем игрока 2</label>
+                  <select id="arenaHelmetSelect1"></select>
+                </div>
+                <div class="arena-field">
+                  <label for="arenaArmorSelect0">Доспех игрока 1</label>
+                  <select id="arenaArmorSelect0"></select>
+                </div>
+                <div class="arena-field">
+                  <label for="arenaArmorSelect1">Доспех игрока 2</label>
+                  <select id="arenaArmorSelect1"></select>
+                </div>
+              </div>
+
+              <div class="button-row">
+                <button id="arenaStartBtn" class="primary-btn" type="button">Начать дуэль</button>
+                <button id="arenaMenuBtn" class="secondary-btn" type="button">Вернуться в меню</button>
+              </div>
+            </div>
+
+            <div id="arenaChoicePanel" class="hidden">
+              <div class="arena-choice-grid">
+                <div class="arena-choice-card">
+                  <h3>Куда наносим удар?</h3>
+                  <div id="arenaAttackChoices" class="arena-choice-buttons"></div>
+                </div>
+                <div class="arena-choice-card">
+                  <h3>Что защищаем?</h3>
+                  <div id="arenaDefenseChoices" class="arena-choice-buttons"></div>
+                </div>
+              </div>
+
+              <div class="button-row" style="margin-top: 16px;">
+                <button id="arenaConfirmBtn" class="primary-btn" type="button">Подтвердить ход</button>
+                <button id="arenaRandomBtn" class="secondary-btn" type="button">Случайный ход</button>
+              </div>
+            </div>
+
+            <div id="arenaLogPanel" class="arena-round-log"></div>
+          </div>
+        </div>
+      </section>
+
       <section id="result-screen" class="screen">
         <div class="card result-card">
           <div id="result-emoji" class="result-emoji">🎉</div>
@@ -1716,6 +2083,28 @@
             <div id="achievements-grid" class="achievement-grid"></div>
           </div>
 
+          <div class="shop-section">
+            <div>
+              <h3 class="section-title" style="font-size: 26px;">Магазин арены</h3>
+              <p class="section-text">За очки из учебных режимов открывай новое оружие, шлемы и доспехи для локальной PvP-арены.</p>
+            </div>
+            <div id="shop-summary" class="cloud-panel"></div>
+            <div class="shop-columns">
+              <div class="shop-column">
+                <h3>Оружие</h3>
+                <div id="weapons-shop" class="shop-grid"></div>
+              </div>
+              <div class="shop-column">
+                <h3>Шлемы</h3>
+                <div id="helmets-shop" class="shop-grid"></div>
+              </div>
+              <div class="shop-column">
+                <h3>Доспехи корпуса</h3>
+                <div id="armors-shop" class="shop-grid"></div>
+              </div>
+            </div>
+          </div>
+
           <div id="stats-cloud-panel" class="cloud-panel"></div>
 
           <div class="cloud-panel">
@@ -1745,6 +2134,8 @@
     const LEADERBOARD_LIMIT = 20;
     const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAHqlv_XUprxqxxYMqyTboDP_zi6ft0cMl5PH4DLlr3QTKjR1kcCBU_SeROijKRFPZyA/exec";
     const DEFAULT_GOOGLE_CLIENT_ID = "355161249555-b2sssv764jqvvf1p25i5pm2oem1ffmnp.apps.googleusercontent.com";
+    const PVP_TURN_SECONDS = 7;
+    const NUMBER_VALUES = Array.from({ length: 20 }, (_, index) => index + 1);
     const HEROES = [
       { id: "hero-1", name: "Супергерой", emoji: "🦸‍♂️" },
       { id: "hero-2", name: "Смелый малыш", emoji: "🧒" }
@@ -1765,7 +2156,25 @@
       { emoji: "🐟", word: "РЫБА" },
       { emoji: "🌳", word: "ДЕРЕВО" },
       { emoji: "🦊", word: "ЛИСА" },
-      { emoji: "🎈", word: "ШАР" }
+      { emoji: "🎈", word: "ШАР" },
+      { emoji: "🦔", word: "ЁЖ" },
+      { emoji: "🐞", word: "ЖУК" },
+      { emoji: "🐇", word: "ЗАЯЦ" },
+      { emoji: "🥛", word: "ЙОГУРТ" },
+      { emoji: "🪁", word: "ЗМЕЙ" },
+      { emoji: "🧀", word: "СЫР" },
+      { emoji: "🍞", word: "ХЛЕБ" },
+      { emoji: "🌸", word: "ЦВЕТОК" },
+      { emoji: "☕", word: "ЧАЙ" },
+      { emoji: "🐟", word: "ЩУКА" },
+      { emoji: "🪀", word: "ЮЛА" },
+      { emoji: "🌫️", word: "ЭХО" },
+      { emoji: "🚩", word: "ФЛАГ" }
+    ];
+    const SYLLABLES = [
+      "МА", "МО", "МУ", "НА", "НО", "НУ", "РА", "РО",
+      "ЛА", "ЛО", "СА", "СО", "ША", "ЖА", "ТА", "ТО",
+      "КО", "КИ", "ПА", "ПО", "БА", "БО", "ФА", "ХО"
     ];
     const MONSTERS = [
       { emoji: "👾", name: "Пиксельный слизик", line: "Поиграем в буквы?" },
@@ -1773,12 +2182,38 @@
       { emoji: "🧟‍♂️", name: "Смешной зомби", line: "Я добрый и люблю считать." },
       { emoji: "🐲", name: "Дракоша Фыр", line: "Пых-пых! Найди нужный знак!" }
     ];
+    const WEAPONS = [
+      { id: "hands", emoji: "👊", name: "Кулаки", damageHead: 14, damageBody: 10, price: 0, description: "Быстрый базовый удар." },
+      { id: "stick", emoji: "🪵", name: "Палка", damageHead: 18, damageBody: 14, price: 40, description: "Даёт чуть более сильный удар." },
+      { id: "woodSword", emoji: "🪓", name: "Деревянный меч", damageHead: 22, damageBody: 18, price: 90, description: "Безопасный тренировочный меч." },
+      { id: "copperSword", emoji: "⚔️", name: "Медный меч", damageHead: 26, damageBody: 21, price: 170, description: "Бьёт заметно сильнее." },
+      { id: "ironSword", emoji: "🗡️", name: "Железный меч", damageHead: 31, damageBody: 25, price: 280, description: "Лучшее оружие арены." }
+    ];
+    const HELMETS = [
+      { id: "none", emoji: "🙂", name: "Без шлема", guard: 0, price: 0, description: "Голова ничем не защищена." },
+      { id: "woodHelmet", emoji: "🪖", name: "Деревянный шлем", guard: 3, price: 30, description: "Смягчает удар по голове." },
+      { id: "leatherHelmet", emoji: "⛑️", name: "Кожаный шлем", guard: 5, price: 70, description: "Защита получше." },
+      { id: "copperHelmet", emoji: "🪖", name: "Медный шлем", guard: 7, price: 130, description: "Плотный и крепкий." },
+      { id: "ironHelmet", emoji: "🛡️", name: "Железный шлем", guard: 10, price: 220, description: "Самый сильный шлем." }
+    ];
+    const ARMORS = [
+      { id: "none", emoji: "👕", name: "Без доспеха", guard: 0, price: 0, description: "Корпус не защищён." },
+      { id: "woodArmor", emoji: "🪵", name: "Деревянный доспех", guard: 4, price: 35, description: "Лёгкая броня для корпуса." },
+      { id: "leatherArmor", emoji: "🥋", name: "Кожаный доспех", guard: 6, price: 80, description: "Удобная и плотная защита." },
+      { id: "copperArmor", emoji: "🛡️", name: "Медный доспех", guard: 8, price: 150, description: "Хорошо держит удар." },
+      { id: "ironArmor", emoji: "🦺", name: "Железный доспех", guard: 11, price: 240, description: "Самый крепкий корпусный доспех." }
+    ];
+    const PVP_ZONES = [
+      { id: "head", title: "Голова", emoji: "🧠" },
+      { id: "body", title: "Корпус", emoji: "🛡️" }
+    ];
     const GOOD_MESSAGES = ["Отлично!", "Молодец!", "Супер!"];
     const SOFT_MESSAGES = ["Почти! Попробуй ещё", "Ничего, давай ещё раз!", "Спокойно, у тебя получится!"];
     const MODE_LABELS = {
       letters: "Буквы",
       numbers: "Цифры",
-      mixed: "Смешанный"
+      mixed: "Смешанный",
+      arena: "Арена"
     };
     const ACHIEVEMENTS = [
       { id: "firstMonster", emoji: "⚔️", title: "Первый монстр побеждён", description: "Выиграй первый бой." },
@@ -1794,6 +2229,7 @@
         mode: document.getElementById("mode-screen"),
         battle: document.getElementById("battle-screen"),
         race: document.getElementById("race-screen"),
+        pvp: document.getElementById("pvp-screen"),
         result: document.getElementById("result-screen"),
         stats: document.getElementById("stats-screen")
       },
@@ -1861,6 +2297,39 @@
       raceAnswers: document.getElementById("race-answers"),
       raceFeedback: document.getElementById("race-feedback"),
       raceMenuBtn: document.getElementById("raceMenuBtn"),
+      arenaRoundLabel: document.getElementById("arenaRoundLabel"),
+      arenaCoinsLabel: document.getElementById("arenaCoinsLabel"),
+      arenaTimerLabel: document.getElementById("arenaTimerLabel"),
+      arenaTurnLabel: document.getElementById("arenaTurnLabel"),
+      arenaFighter0: document.getElementById("arena-fighter-0"),
+      arenaFighter1: document.getElementById("arena-fighter-1"),
+      arenaName0: document.getElementById("arenaName0"),
+      arenaName1: document.getElementById("arenaName1"),
+      arenaLoadout0: document.getElementById("arenaLoadout0"),
+      arenaLoadout1: document.getElementById("arenaLoadout1"),
+      arenaHpText0: document.getElementById("arenaHpText0"),
+      arenaHpText1: document.getElementById("arenaHpText1"),
+      arenaHpFill0: document.getElementById("arenaHpFill0"),
+      arenaHpFill1: document.getElementById("arenaHpFill1"),
+      arenaPromptTitle: document.getElementById("arenaPromptTitle"),
+      arenaPromptText: document.getElementById("arenaPromptText"),
+      arenaSetupPanel: document.getElementById("arenaSetupPanel"),
+      arenaChoicePanel: document.getElementById("arenaChoicePanel"),
+      arenaLogPanel: document.getElementById("arenaLogPanel"),
+      arenaNameInput0: document.getElementById("arenaNameInput0"),
+      arenaNameInput1: document.getElementById("arenaNameInput1"),
+      arenaWeaponSelect0: document.getElementById("arenaWeaponSelect0"),
+      arenaWeaponSelect1: document.getElementById("arenaWeaponSelect1"),
+      arenaHelmetSelect0: document.getElementById("arenaHelmetSelect0"),
+      arenaHelmetSelect1: document.getElementById("arenaHelmetSelect1"),
+      arenaArmorSelect0: document.getElementById("arenaArmorSelect0"),
+      arenaArmorSelect1: document.getElementById("arenaArmorSelect1"),
+      arenaStartBtn: document.getElementById("arenaStartBtn"),
+      arenaMenuBtn: document.getElementById("arenaMenuBtn"),
+      arenaAttackChoices: document.getElementById("arenaAttackChoices"),
+      arenaDefenseChoices: document.getElementById("arenaDefenseChoices"),
+      arenaConfirmBtn: document.getElementById("arenaConfirmBtn"),
+      arenaRandomBtn: document.getElementById("arenaRandomBtn"),
       resultEmoji: document.getElementById("result-emoji"),
       resultTitle: document.getElementById("result-title"),
       resultText: document.getElementById("result-text"),
@@ -1870,6 +2339,10 @@
       resultMenuBtn: document.getElementById("resultMenuBtn"),
       newAchievements: document.getElementById("new-achievements"),
       newAchievementsGrid: document.getElementById("new-achievements-grid"),
+      shopSummary: document.getElementById("shop-summary"),
+      weaponsShop: document.getElementById("weapons-shop"),
+      helmetsShop: document.getElementById("helmets-shop"),
+      armorsShop: document.getElementById("armors-shop"),
       statsMenuBtn: document.getElementById("statsMenuBtn"),
       resetProgressBtn: document.getElementById("resetProgressBtn")
     };
@@ -1897,6 +2370,7 @@
         finishSteps: 5,
         currentSteps: 0
       },
+      pvp: null,
       result: null,
       lastUnlocked: [],
       pendingTimer: null,
@@ -1914,9 +2388,13 @@
       error: ""
     };
 
+    normalizeProgressData();
+
     function createDefaultProgress() {
       return {
         bestScore: 0,
+        coins: 0,
+        totalCoinsEarned: 0,
         levelsCompleted: 0,
         correctAnswers: 0,
         mistakes: 0,
@@ -1926,7 +2404,32 @@
         achievements: [],
         categoryCorrect: {
           letters: 0,
-          numbers: 0
+          numbers: 0,
+          reading: 0,
+          math: 0
+        },
+        curriculum: {
+          letterIndex: 0,
+          numberIndex: 0,
+          wordIndex: 0,
+          syllableIndex: 0,
+          readingWordIndex: 0,
+          countIndex: 0,
+          mathIndex: 0
+        },
+        shop: {
+          ownedWeapons: ["hands"],
+          ownedHelmets: ["none"],
+          ownedArmors: ["none"],
+          equippedWeapon: "hands",
+          equippedHelmet: "none",
+          equippedArmor: "none"
+        },
+        pvp: {
+          battles: 0,
+          wins: 0,
+          losses: 0,
+          rounds: 0
         }
       };
     }
@@ -1961,6 +2464,21 @@
           categoryCorrect: {
             ...createDefaultProgress().categoryCorrect,
             ...(saved.categoryCorrect || {})
+          },
+          curriculum: {
+            ...createDefaultProgress().curriculum,
+            ...(saved.curriculum || {})
+          },
+          shop: {
+            ...createDefaultProgress().shop,
+            ...(saved.shop || {}),
+            ownedWeapons: Array.isArray(saved.shop && saved.shop.ownedWeapons) ? saved.shop.ownedWeapons : ["hands"],
+            ownedHelmets: Array.isArray(saved.shop && saved.shop.ownedHelmets) ? saved.shop.ownedHelmets : ["none"],
+            ownedArmors: Array.isArray(saved.shop && saved.shop.ownedArmors) ? saved.shop.ownedArmors : ["none"]
+          },
+          pvp: {
+            ...createDefaultProgress().pvp,
+            ...(saved.pvp || {})
           },
           achievements: Array.isArray(saved.achievements) ? saved.achievements : []
         };
@@ -2001,6 +2519,7 @@
     }
 
     function saveProgress(options = {}) {
+      normalizeProgressData();
       if (!options.preserveTimestamp) {
         progress.updatedAt = new Date().toISOString();
       }
@@ -2108,6 +2627,124 @@
       }
 
       return `<div class="${className} fallback" aria-hidden="true">${escapeHtml(getAvatarFallback(name))}</div>`;
+    }
+
+    function getCatalogItem(catalog, itemId) {
+      return catalog.find((item) => item.id === itemId) || catalog[0];
+    }
+
+    function getWeaponById(itemId) {
+      return getCatalogItem(WEAPONS, itemId);
+    }
+
+    function getHelmetById(itemId) {
+      return getCatalogItem(HELMETS, itemId);
+    }
+
+    function getArmorById(itemId) {
+      return getCatalogItem(ARMORS, itemId);
+    }
+
+    function uniqueList(items, fallbackId) {
+      const seen = new Set();
+      const list = [];
+      (items || []).forEach((item) => {
+        if (!seen.has(item)) {
+          seen.add(item);
+          list.push(item);
+        }
+      });
+      if (!list.length) {
+        list.push(fallbackId);
+      }
+      return list;
+    }
+
+    function normalizeProgressData() {
+      progress.shop.ownedWeapons = uniqueList(progress.shop.ownedWeapons, "hands").filter((id) => WEAPONS.some((item) => item.id === id));
+      progress.shop.ownedHelmets = uniqueList(progress.shop.ownedHelmets, "none").filter((id) => HELMETS.some((item) => item.id === id));
+      progress.shop.ownedArmors = uniqueList(progress.shop.ownedArmors, "none").filter((id) => ARMORS.some((item) => item.id === id));
+
+      if (!progress.shop.ownedWeapons.length) {
+        progress.shop.ownedWeapons = ["hands"];
+      }
+      if (!progress.shop.ownedHelmets.length) {
+        progress.shop.ownedHelmets = ["none"];
+      }
+      if (!progress.shop.ownedArmors.length) {
+        progress.shop.ownedArmors = ["none"];
+      }
+
+      if (!progress.shop.ownedWeapons.includes(progress.shop.equippedWeapon)) {
+        progress.shop.equippedWeapon = progress.shop.ownedWeapons[0];
+      }
+      if (!progress.shop.ownedHelmets.includes(progress.shop.equippedHelmet)) {
+        progress.shop.equippedHelmet = progress.shop.ownedHelmets[0];
+      }
+      if (!progress.shop.ownedArmors.includes(progress.shop.equippedArmor)) {
+        progress.shop.equippedArmor = progress.shop.ownedArmors[0];
+      }
+    }
+
+    function nextCurriculumValue(key, items) {
+      if (!items.length) {
+        return null;
+      }
+
+      const index = progress.curriculum[key] % items.length;
+      const value = items[index];
+      progress.curriculum[key] = (progress.curriculum[key] + 1) % items.length;
+      return value;
+    }
+
+    function getPlayerWeaponSummary(weaponId, helmetId, armorId) {
+      const weapon = getWeaponById(weaponId);
+      const helmet = getHelmetById(helmetId);
+      const armor = getArmorById(armorId);
+      return `${weapon.emoji} ${weapon.name} · ${helmet.emoji} ${helmet.name} · ${armor.emoji} ${armor.name}`;
+    }
+
+    function awardCoins(amount) {
+      if (!amount) {
+        return;
+      }
+
+      progress.coins += amount;
+      progress.totalCoinsEarned += amount;
+    }
+
+    function getOwnedItems(catalog, ownedIds) {
+      return catalog.filter((item) => ownedIds.includes(item.id));
+    }
+
+    function createPvpFighter({ name, emoji, weaponId, helmetId, armorId }) {
+      return {
+        name,
+        emoji,
+        maxHp: 100,
+        hp: 100,
+        weaponId,
+        helmetId,
+        armorId,
+        lastDamage: 0
+      };
+    }
+
+    function createPvpMatch() {
+      return {
+        phase: "setup",
+        round: 1,
+        currentChooser: 0,
+        timerLeft: PVP_TURN_SECONDS,
+        turnTimerId: null,
+        fighters: [],
+        choices: [null, null],
+        pendingChoice: {
+          attack: "",
+          defense: ""
+        },
+        log: ["Сначала выберите имена и экипировку для обоих игроков."]
+      };
     }
 
     function formatDateTime(value) {
@@ -2297,11 +2934,13 @@
 
     function goToMenu() {
       clearPendingTimer();
+      stopArenaTurnTimer();
       stopSpeech();
       state.gameType = null;
       state.mode = null;
       state.result = null;
       state.currentQuestion = null;
+      state.pvp = null;
       renderHomeStats();
       renderModeLevels();
       setScreen("start");
@@ -2316,9 +2955,9 @@
     function renderHomeStats() {
       const cards = [
         { value: progress.bestScore, label: "Лучший счёт" },
+        { value: progress.coins, label: "Монеты знаний" },
         { value: progress.levelsCompleted, label: "Пройдено уровней" },
-        { value: progress.correctAnswers, label: "Правильных ответов" },
-        { value: progress.achievements.length, label: "Достижений" }
+        { value: progress.correctAnswers, label: "Правильных ответов" }
       ];
 
       dom.homeStats.innerHTML = cards.map((card) => `
@@ -2334,16 +2973,22 @@
       dom.numbersLevelChip.textContent = progress.battleLevel;
       dom.mixedLevelChip.textContent = progress.battleLevel;
       dom.raceLevelChip.textContent = progress.raceLevel;
+      if (dom.arenaCoinsLabel && (!state.pvp || state.pvp.phase === "setup")) {
+        dom.arenaCoinsLabel.textContent = progress.coins;
+      }
     }
 
     function renderStatsScreen() {
       const statsCards = [
         { value: progress.bestScore, label: "Лучший счёт" },
+        { value: progress.coins, label: "Монеты знаний" },
         { value: progress.levelsCompleted, label: "Пройдено уровней" },
         { value: progress.correctAnswers, label: "Правильных ответов" },
         { value: progress.mistakes, label: "Ошибок" },
         { value: progress.battleLevel, label: "Следующий боевой уровень" },
-        { value: progress.raceLevel, label: "Следующая трасса" }
+        { value: progress.raceLevel, label: "Следующая трасса" },
+        { value: progress.pvp.rounds, label: "Раундов арены" },
+        { value: progress.pvp.battles, label: "Всего дуэлей" }
       ];
 
       dom.statsGrid.innerHTML = statsCards.map((card) => `
@@ -2364,7 +3009,106 @@
         `;
       }).join("");
 
+      renderShopSection();
       renderLeaderboardPanels();
+    }
+
+    function renderShopCards(container, catalog, ownedIds, equippedId, type) {
+      container.innerHTML = catalog.map((item) => {
+        const owned = ownedIds.includes(item.id);
+        const equipped = item.id === equippedId;
+        const canBuy = !owned && progress.coins >= item.price;
+        const buttonLabel = equipped
+          ? "Выбрано"
+          : owned
+            ? "Выбрать"
+            : `Купить за ${item.price}`;
+
+        return `
+          <div class="shop-card ${owned ? "owned" : ""} ${equipped ? "equipped" : ""}">
+            <div class="shop-head">
+              <div class="shop-item-title">${escapeHtml(item.name)}</div>
+              <div class="shop-item-emoji">${escapeHtml(item.emoji)}</div>
+            </div>
+            <div class="shop-meta">${escapeHtml(item.description)}</div>
+            <div class="shop-tag-row">
+              <span class="shop-tag">${type === "weapon" ? `Голова ${item.damageHead} / корпус ${item.damageBody}` : `Защита ${item.guard}`}</span>
+              <span class="shop-tag">${owned ? "Открыто" : `Цена ${item.price}`}</span>
+            </div>
+            <button
+              class="${equipped ? "secondary-btn" : owned ? "accent-btn" : "primary-btn"}"
+              data-shop-type="${type}"
+              data-shop-item="${item.id}"
+              ${!owned && !canBuy ? "disabled" : ""}
+            >${buttonLabel}</button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderShopSection() {
+      dom.shopSummary.innerHTML = `
+        <div class="info-chip-row">
+          <span class="chip success">Монеты знаний: ${progress.coins}</span>
+          <span class="chip">Заработано всего: ${progress.totalCoinsEarned}</span>
+        </div>
+        <p>Кулаки, шлем и корпусная броня выбираются для дуэли отдельно у каждого игрока, но открываются из общего магазина.</p>
+      `;
+
+      renderShopCards(dom.weaponsShop, WEAPONS, progress.shop.ownedWeapons, progress.shop.equippedWeapon, "weapon");
+      renderShopCards(dom.helmetsShop, HELMETS, progress.shop.ownedHelmets, progress.shop.equippedHelmet, "helmet");
+      renderShopCards(dom.armorsShop, ARMORS, progress.shop.ownedArmors, progress.shop.equippedArmor, "armor");
+
+      [
+        ...dom.weaponsShop.querySelectorAll("button[data-shop-item]"),
+        ...dom.helmetsShop.querySelectorAll("button[data-shop-item]"),
+        ...dom.armorsShop.querySelectorAll("button[data-shop-item]")
+      ].forEach((button) => {
+        button.addEventListener("click", () => handleShopAction(button.dataset.shopType, button.dataset.shopItem));
+      });
+    }
+
+    function handleShopAction(type, itemId) {
+      const config = {
+        weapon: {
+          catalog: WEAPONS,
+          ownedKey: "ownedWeapons",
+          equippedKey: "equippedWeapon"
+        },
+        helmet: {
+          catalog: HELMETS,
+          ownedKey: "ownedHelmets",
+          equippedKey: "equippedHelmet"
+        },
+        armor: {
+          catalog: ARMORS,
+          ownedKey: "ownedArmors",
+          equippedKey: "equippedArmor"
+        }
+      }[type];
+
+      if (!config) {
+        return;
+      }
+
+      const item = getCatalogItem(config.catalog, itemId);
+      const ownedList = progress.shop[config.ownedKey];
+      const owned = ownedList.includes(item.id);
+
+      if (!owned) {
+        if (progress.coins < item.price) {
+          window.alert("Нужно ещё немного монет знаний, чтобы купить этот предмет.");
+          return;
+        }
+
+        progress.coins -= item.price;
+        ownedList.push(item.id);
+      }
+
+      progress.shop[config.equippedKey] = item.id;
+      normalizeProgressData();
+      saveProgress();
+      renderStatsScreen();
     }
 
     function normalizeProgressSnapshot(raw) {
@@ -2375,6 +3119,21 @@
         categoryCorrect: {
           ...base.categoryCorrect,
           ...((raw && raw.categoryCorrect) || {})
+        },
+        curriculum: {
+          ...base.curriculum,
+          ...((raw && raw.curriculum) || {})
+        },
+        shop: {
+          ...base.shop,
+          ...((raw && raw.shop) || {}),
+          ownedWeapons: Array.isArray(raw && raw.shop && raw.shop.ownedWeapons) ? raw.shop.ownedWeapons : base.shop.ownedWeapons,
+          ownedHelmets: Array.isArray(raw && raw.shop && raw.shop.ownedHelmets) ? raw.shop.ownedHelmets : base.shop.ownedHelmets,
+          ownedArmors: Array.isArray(raw && raw.shop && raw.shop.ownedArmors) ? raw.shop.ownedArmors : base.shop.ownedArmors
+        },
+        pvp: {
+          ...base.pvp,
+          ...((raw && raw.pvp) || {})
         },
         achievements: Array.isArray(raw && raw.achievements) ? raw.achievements : []
       };
@@ -2406,6 +3165,8 @@
         email: profile.email || "",
         photoUrl: profile.photoUrl || "",
         bestScore: progress.bestScore,
+        coins: progress.coins,
+        totalCoinsEarned: progress.totalCoinsEarned,
         levelsCompleted: progress.levelsCompleted,
         correctAnswers: progress.correctAnswers,
         mistakes: progress.mistakes,
@@ -2413,7 +3174,12 @@
         raceLevel: progress.raceLevel,
         lettersCorrect: progress.categoryCorrect.letters,
         numbersCorrect: progress.categoryCorrect.numbers,
+        readingCorrect: progress.categoryCorrect.reading,
+        mathCorrect: progress.categoryCorrect.math,
         achievementsJson: JSON.stringify(progress.achievements),
+        curriculumJson: JSON.stringify(progress.curriculum),
+        shopJson: JSON.stringify(progress.shop),
+        pvpJson: JSON.stringify(progress.pvp),
         updatedAt: progress.updatedAt
       };
     }
@@ -2509,6 +3275,7 @@
         if (response.progress) {
           const remoteSnapshot = normalizeProgressSnapshot(response.progress);
           progress = selectNewestProgress(progress, remoteSnapshot);
+          normalizeProgressData();
           saveProgress({ skipCloud: true, preserveTimestamp: true });
         }
 
@@ -2557,6 +3324,7 @@
         const usedRemote = chosenSnapshot === remoteSnapshot;
 
         progress = chosenSnapshot;
+        normalizeProgressData();
         if (response.playerName) {
           profile.playerName = response.playerName;
         }
@@ -2752,6 +3520,7 @@
 
     function openStats() {
       clearPendingTimer();
+      stopArenaTurnTimer();
       stopSpeech();
       renderStatsScreen();
       setScreen("stats");
@@ -2759,9 +3528,35 @@
 
     function startGame(gameType, mode) {
       clearPendingTimer();
+      stopArenaTurnTimer();
       stopSpeech();
       state.gameType = gameType;
       state.mode = mode;
+      state.pvp = null;
+
+      if (gameType === "pvp") {
+        state.level = 1;
+        state.totalTasks = 0;
+        state.taskIndex = 0;
+        state.players = [];
+        state.activePlayerIndex = 0;
+        state.sessionScore = 0;
+        state.sessionCorrect = 0;
+        state.sessionMistakes = 0;
+        state.currentQuestion = null;
+        state.feedback = "Арена ждёт бойцов.";
+        state.inputLocked = false;
+        state.selectedAnswer = null;
+        state.revealAnswers = false;
+        state.lastUnlocked = [];
+        state.result = null;
+        state.lastSpokenQuestionId = null;
+        state.pvp = createPvpMatch();
+        setScreen("pvp");
+        renderPvpScreen();
+        return;
+      }
+
       state.level = gameType === "race" ? progress.raceLevel : progress.battleLevel;
       state.totalTasks = gameType === "race"
         ? clamp(6 + Math.floor((state.level - 1) / 2), 6, 7)
@@ -2817,17 +3612,33 @@
 
     function generateQuestion(mode, level) {
       const questionId = `q-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      const availableTypes = {
-        letters: ["letter", "firstLetter"],
-        numbers: ["number", "count"],
-        mixed: ["letter", "number", "count", "firstLetter"]
-      }[mode];
+      const availableTypes = [];
+
+      if (mode === "letters" || mode === "mixed") {
+        availableTypes.push("letter", "firstLetter");
+        if (level >= 3) {
+          availableTypes.push("syllable");
+        }
+        if (level >= 5) {
+          availableTypes.push("readWord");
+        }
+      }
+
+      if (mode === "numbers" || mode === "mixed") {
+        availableTypes.push("number", "count");
+        if (level >= 3) {
+          availableTypes.push("neighbor");
+        }
+        if (level >= 5) {
+          availableTypes.push("math");
+        }
+      }
 
       const type = randomItem(availableTypes);
 
       if (type === "letter") {
-        const pool = shuffle(LETTERS).slice(0, clamp(6 + level * 2, 6, LETTERS.length));
-        const answer = randomItem(pool);
+        const unlockedLetters = LETTERS.slice(0, clamp(8 + level * 3, 8, LETTERS.length));
+        const answer = nextCurriculumValue("letterIndex", unlockedLetters);
         return {
           id: questionId,
           type,
@@ -2835,35 +3646,37 @@
           prompt: "Найди букву",
           help: "",
           answer,
-          options: buildOptions(answer, pool),
+          options: buildOptions(answer, unlockedLetters),
           visual: { type: "badge", value: "🔤" },
           speechText: `Найди букву ${answer}`
         };
       }
 
       if (type === "number") {
-        const maxNumber = clamp(4 + level, 4, 9);
-        const digits = Array.from({ length: maxNumber }, (_, index) => String(index + 1));
-        const answer = randomItem(digits);
+        const maxNumber = clamp(4 + level * 2, 5, 20);
+        const digits = NUMBER_VALUES.slice(0, maxNumber).map(String);
+        const answer = String(nextCurriculumValue("numberIndex", digits));
+        const useNumberWord = Number(answer) > 9;
         return {
           id: questionId,
           type,
           category: "numbers",
-          prompt: "Найди цифру",
+          prompt: useNumberWord ? "Найди число" : "Найди цифру",
           help: "",
           answer,
           options: buildOptions(answer, digits),
           visual: { type: "badge", value: "🔢" },
-          speechText: `Найди цифру ${answer}`
+          speechText: `${useNumberWord ? "Найди число" : "Найди цифру"} ${answer}`
         };
       }
 
       if (type === "count") {
-        const maxCount = clamp(3 + level, 3, 9);
-        const answerNumber = String(Math.floor(Math.random() * maxCount) + 1);
+        const maxCount = clamp(3 + level, 3, 10);
+        const countPool = NUMBER_VALUES.slice(0, maxCount).map(String);
+        const answerNumber = String(nextCurriculumValue("countIndex", countPool));
         const emoji = randomItem(ITEM_EMOJIS);
         const optionPool = Array.from(
-          { length: clamp(maxCount + 1, 3, 9) },
+          { length: maxCount },
           (_, index) => String(index + 1)
         );
         return {
@@ -2879,26 +3692,114 @@
         };
       }
 
-      const wordLimit = clamp(4 + level, 4, WORD_BANK.length);
-      const wordPool = shuffle(WORD_BANK).slice(0, wordLimit);
-      const wordEntry = randomItem(wordPool);
-      const answer = wordEntry.word[0];
-      const initialPool = Array.from(new Set(wordPool.map((entry) => entry.word[0])));
+      if (type === "firstLetter") {
+        const wordLimit = clamp(5 + level * 2, 5, WORD_BANK.length);
+        const wordPool = WORD_BANK.slice(0, wordLimit);
+        const wordEntry = nextCurriculumValue("wordIndex", wordPool);
+        const answer = wordEntry.word[0];
+        const initialPool = Array.from(new Set(wordPool.map((entry) => entry.word[0])));
+        return {
+          id: questionId,
+          type: "firstLetter",
+          category: "letters",
+          prompt: "С какой буквы начинается слово?",
+          help: "",
+          answer,
+          options: buildOptions(answer, initialPool.length >= 3 ? initialPool : LETTERS),
+          visual: { type: "word", emoji: wordEntry.emoji, word: wordEntry.word },
+          speechText: `С какой буквы начинается слово ${wordEntry.word}?`
+        };
+      }
+
+      if (type === "syllable") {
+        const syllablePool = SYLLABLES.slice(0, clamp(6 + level * 2, 6, SYLLABLES.length));
+        const answer = nextCurriculumValue("syllableIndex", syllablePool);
+        return {
+          id: questionId,
+          type: "syllable",
+          category: "reading",
+          prompt: "Найди слог",
+          help: "",
+          answer,
+          options: buildOptions(answer, syllablePool),
+          visual: { type: "badge", value: "📘" },
+          speechText: `Найди слог ${answer}`
+        };
+      }
+
+      if (type === "readWord") {
+        const readingPool = WORD_BANK.slice(0, clamp(6 + level * 2, 6, WORD_BANK.length));
+        const answerEntry = nextCurriculumValue("readingWordIndex", readingPool);
+        return {
+          id: questionId,
+          type: "readWord",
+          category: "reading",
+          prompt: "Какое слово подходит к картинке?",
+          help: "",
+          answer: answerEntry.word,
+          options: buildOptions(answerEntry.word, readingPool.map((entry) => entry.word)),
+          visual: { type: "emojiOnly", emoji: answerEntry.emoji },
+          speechText: "Какое слово подходит к картинке?"
+        };
+      }
+
+      if (type === "neighbor") {
+        const maxNumber = clamp(8 + level * 2, 8, 20);
+        const baseNumber = Number(nextCurriculumValue("numberIndex", NUMBER_VALUES.slice(1, maxNumber)));
+        const answer = String(baseNumber + 1);
+        const pool = NUMBER_VALUES.slice(1, maxNumber + 1).map(String);
+        return {
+          id: questionId,
+          type: "neighbor",
+          category: "math",
+          prompt: `Какое число после ${baseNumber}?`,
+          help: "",
+          answer,
+          options: buildOptions(answer, pool),
+          visual: { type: "badge", value: "🔢" },
+          speechText: `Какое число после ${baseNumber}?`
+        };
+      }
+
+      const plus = Math.random() > 0.4;
+      const maxOperand = clamp(4 + level * 2, 5, 10);
+      const leftPool = plus
+        ? NUMBER_VALUES.slice(1, maxOperand + 1)
+        : NUMBER_VALUES.slice(2, maxOperand + 1);
+      const left = Number(nextCurriculumValue("mathIndex", leftPool));
+      let right = Math.floor(Math.random() * maxOperand) + 1;
+      let answerNumber;
+      let expression;
+
+      if (!plus && left <= right) {
+        right = Math.max(1, left - 1);
+      }
+
+      if (plus) {
+        answerNumber = Math.min(20, left + right);
+        expression = `${left} + ${right}`;
+      } else {
+        answerNumber = left - right;
+        expression = `${left} - ${right}`;
+      }
+
+      const mathPool = NUMBER_VALUES.filter((item) => item <= 20).map(String);
       return {
         id: questionId,
-        type: "firstLetter",
-        category: "letters",
-        prompt: "С какой буквы начинается слово?",
+        type: "math",
+        category: "math",
+        prompt: `Сколько будет ${expression}?`,
         help: "",
-        answer,
-        options: buildOptions(answer, initialPool.length >= 3 ? initialPool : LETTERS),
-        visual: { type: "word", emoji: wordEntry.emoji, word: wordEntry.word },
-        speechText: `С какой буквы начинается слово ${wordEntry.word}?`
+        answer: String(answerNumber),
+        options: buildOptions(String(answerNumber), mathPool),
+        visual: { type: "badge", value: plus ? "➕" : "➖" },
+        speechText: `Сколько будет ${expression}?`
       };
     }
 
     function buildOptions(answer, sourcePool) {
-      const otherOptions = shuffle(sourcePool.filter((item) => item !== answer)).slice(0, 2);
+      const uniquePool = Array.from(new Set(sourcePool.map(String)));
+      const otherOptions = shuffle(uniquePool.filter((item) => item !== String(answer))).slice(0, 2);
       return shuffle([answer, ...otherOptions]);
     }
 
@@ -2928,6 +3829,18 @@
       }
 
       if (question.visual.type === "word") {
+        const wrap = document.createElement("div");
+        wrap.className = "word-visual";
+
+        const emoji = document.createElement("span");
+        emoji.className = "word-emoji";
+        emoji.textContent = question.visual.emoji;
+        wrap.appendChild(emoji);
+        container.appendChild(wrap);
+        return;
+      }
+
+      if (question.visual.type === "emojiOnly") {
         const wrap = document.createElement("div");
         wrap.className = "word-visual";
 
@@ -3074,6 +3987,311 @@
       autoSpeakQuestion();
     }
 
+    function fillArenaSelect(select, items, selectedId) {
+      select.innerHTML = items.map((item) => `
+        <option value="${escapeHtml(item.id)}">${escapeHtml(`${item.emoji} ${item.name}`)}</option>
+      `).join("");
+      select.value = items.some((item) => item.id === selectedId) ? selectedId : items[0].id;
+    }
+
+    function renderArenaSetupOptions() {
+      const ownedWeapons = getOwnedItems(WEAPONS, progress.shop.ownedWeapons);
+      const ownedHelmets = getOwnedItems(HELMETS, progress.shop.ownedHelmets);
+      const ownedArmors = getOwnedItems(ARMORS, progress.shop.ownedArmors);
+      const selected = {
+        weapon0: progress.shop.ownedWeapons.includes(dom.arenaWeaponSelect0.value) ? dom.arenaWeaponSelect0.value : progress.shop.equippedWeapon,
+        weapon1: progress.shop.ownedWeapons.includes(dom.arenaWeaponSelect1.value) ? dom.arenaWeaponSelect1.value : progress.shop.equippedWeapon,
+        helmet0: progress.shop.ownedHelmets.includes(dom.arenaHelmetSelect0.value) ? dom.arenaHelmetSelect0.value : progress.shop.equippedHelmet,
+        helmet1: progress.shop.ownedHelmets.includes(dom.arenaHelmetSelect1.value) ? dom.arenaHelmetSelect1.value : progress.shop.equippedHelmet,
+        armor0: progress.shop.ownedArmors.includes(dom.arenaArmorSelect0.value) ? dom.arenaArmorSelect0.value : progress.shop.equippedArmor,
+        armor1: progress.shop.ownedArmors.includes(dom.arenaArmorSelect1.value) ? dom.arenaArmorSelect1.value : progress.shop.equippedArmor
+      };
+
+      fillArenaSelect(dom.arenaWeaponSelect0, ownedWeapons, selected.weapon0);
+      fillArenaSelect(dom.arenaWeaponSelect1, ownedWeapons, selected.weapon1);
+      fillArenaSelect(dom.arenaHelmetSelect0, ownedHelmets, selected.helmet0);
+      fillArenaSelect(dom.arenaHelmetSelect1, ownedHelmets, selected.helmet1);
+      fillArenaSelect(dom.arenaArmorSelect0, ownedArmors, selected.armor0);
+      fillArenaSelect(dom.arenaArmorSelect1, ownedArmors, selected.armor1);
+    }
+
+    function renderArenaChoiceButtons(container, selectedValue, type) {
+      container.innerHTML = PVP_ZONES.map((zone) => `
+        <button
+          class="arena-choice-btn ${selectedValue === zone.id ? "selected" : ""}"
+          data-choice-type="${type}"
+          data-choice-value="${zone.id}"
+          type="button"
+        >${zone.emoji}<br>${zone.title}</button>
+      `).join("");
+
+      container.querySelectorAll("button[data-choice-value]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.pvp.pendingChoice[type] = button.dataset.choiceValue;
+          renderPvpScreen();
+        });
+      });
+    }
+
+    function stopArenaTurnTimer() {
+      if (state.pvp && state.pvp.turnTimerId) {
+        window.clearInterval(state.pvp.turnTimerId);
+        state.pvp.turnTimerId = null;
+      }
+    }
+
+    function startArenaTurnTimer() {
+      stopArenaTurnTimer();
+      if (!state.pvp || state.pvp.phase !== "choose") {
+        return;
+      }
+
+      state.pvp.timerLeft = PVP_TURN_SECONDS;
+      dom.arenaTimerLabel.textContent = state.pvp.timerLeft;
+      state.pvp.turnTimerId = window.setInterval(() => {
+        state.pvp.timerLeft -= 1;
+        if (state.pvp.timerLeft <= 0) {
+          state.pvp.timerLeft = 0;
+          renderPvpScreen();
+          commitArenaChoice(true);
+          return;
+        }
+        dom.arenaTimerLabel.textContent = state.pvp.timerLeft;
+      }, 1000);
+    }
+
+    function renderPvpScreen() {
+      if (!state.pvp) {
+        return;
+      }
+
+      const fighters = state.pvp.fighters;
+      const currentIndex = state.pvp.currentChooser;
+      const currentName = fighters[currentIndex] ? fighters[currentIndex].name : "Игрок";
+
+      dom.arenaRoundLabel.textContent = `Раунд ${state.pvp.round}`;
+      dom.arenaCoinsLabel.textContent = progress.coins;
+      dom.arenaTimerLabel.textContent = state.pvp.phase === "choose" ? state.pvp.timerLeft : "—";
+      dom.arenaTurnLabel.textContent = state.pvp.phase === "setup"
+        ? "Подготовка"
+        : state.pvp.phase === "choose"
+          ? currentName
+          : "Разбор хода";
+
+      if (state.pvp.phase === "setup") {
+        renderArenaSetupOptions();
+      }
+
+      [0, 1].forEach((index) => {
+        const fighter = fighters[index];
+        const fallbackName = index === 0 ? dom.arenaNameInput0.value : dom.arenaNameInput1.value;
+        const name = fighter ? fighter.name : (fallbackName || `Игрок ${index + 1}`);
+        const weaponId = fighter ? fighter.weaponId : (index === 0 ? dom.arenaWeaponSelect0.value : dom.arenaWeaponSelect1.value) || progress.shop.equippedWeapon;
+        const helmetId = fighter ? fighter.helmetId : (index === 0 ? dom.arenaHelmetSelect0.value : dom.arenaHelmetSelect1.value) || progress.shop.equippedHelmet;
+        const armorId = fighter ? fighter.armorId : (index === 0 ? dom.arenaArmorSelect0.value : dom.arenaArmorSelect1.value) || progress.shop.equippedArmor;
+        const hp = fighter ? fighter.hp : 100;
+        const maxHp = fighter ? fighter.maxHp : 100;
+        const hpPercent = (hp / maxHp) * 100;
+
+        dom[`arenaName${index}`].textContent = name;
+        dom[`arenaLoadout${index}`].textContent = getPlayerWeaponSummary(weaponId, helmetId, armorId);
+        dom[`arenaHpText${index}`].textContent = `${hp} / ${maxHp}`;
+        dom[`arenaHpFill${index}`].style.width = `${hpPercent}%`;
+      });
+
+      dom.arenaFighter0.classList.toggle("current-turn", state.pvp.phase === "choose" && currentIndex === 0);
+      dom.arenaFighter1.classList.toggle("current-turn", state.pvp.phase === "choose" && currentIndex === 1);
+
+      dom.arenaSetupPanel.classList.toggle("hidden", state.pvp.phase !== "setup");
+      dom.arenaChoicePanel.classList.toggle("hidden", state.pvp.phase !== "choose");
+
+      if (state.pvp.phase === "setup") {
+        dom.arenaPromptTitle.textContent = "Подготовь игроков к бою";
+        dom.arenaPromptText.textContent = "Выбери имена и открой подходящее снаряжение из магазина статистики.";
+      } else if (state.pvp.phase === "choose") {
+        dom.arenaPromptTitle.textContent = `${currentName}, выбери удар и защиту`;
+        dom.arenaPromptText.textContent = "Выбор будет скрыт до конца раунда. Если время кончится, ход выберется случайно.";
+        renderArenaChoiceButtons(dom.arenaAttackChoices, state.pvp.pendingChoice.attack, "attack");
+        renderArenaChoiceButtons(dom.arenaDefenseChoices, state.pvp.pendingChoice.defense, "defense");
+      } else {
+        dom.arenaPromptTitle.textContent = "Раунд завершён";
+        dom.arenaPromptText.textContent = "Сейчас видно, кто попал, а кто успел защититься.";
+      }
+
+      dom.arenaLogPanel.innerHTML = state.pvp.log.map((line) => `
+        <div class="arena-log-item">${escapeHtml(line)}</div>
+      `).join("");
+    }
+
+    function startArenaMatch() {
+      normalizeProgressData();
+      const fighterOne = createPvpFighter({
+        name: String(dom.arenaNameInput0.value || "Игрок 1").trim() || "Игрок 1",
+        emoji: HEROES[0].emoji,
+        weaponId: dom.arenaWeaponSelect0.value,
+        helmetId: dom.arenaHelmetSelect0.value,
+        armorId: dom.arenaArmorSelect0.value
+      });
+      const fighterTwo = createPvpFighter({
+        name: String(dom.arenaNameInput1.value || "Игрок 2").trim() || "Игрок 2",
+        emoji: HEROES[1].emoji,
+        weaponId: dom.arenaWeaponSelect1.value,
+        helmetId: dom.arenaHelmetSelect1.value,
+        armorId: dom.arenaArmorSelect1.value
+      });
+
+      state.pvp.phase = "choose";
+      state.pvp.round = 1;
+      state.pvp.currentChooser = 0;
+      state.pvp.choices = [null, null];
+      state.pvp.pendingChoice = { attack: "", defense: "" };
+      state.pvp.timerLeft = PVP_TURN_SECONDS;
+      state.pvp.fighters = [fighterOne, fighterTwo];
+      state.pvp.log = [`Дуэль началась. ${fighterOne.name} выбирает первый скрытый ход.`];
+      renderPvpScreen();
+      startArenaTurnTimer();
+    }
+
+    function chooseRandomArenaMove() {
+      state.pvp.pendingChoice.attack = state.pvp.pendingChoice.attack || randomItem(PVP_ZONES).id;
+      state.pvp.pendingChoice.defense = state.pvp.pendingChoice.defense || randomItem(PVP_ZONES).id;
+      renderPvpScreen();
+    }
+
+    function commitArenaChoice(fromTimer = false) {
+      if (!state.pvp || state.pvp.phase !== "choose") {
+        return;
+      }
+
+      if (!state.pvp.pendingChoice.attack || !state.pvp.pendingChoice.defense) {
+        if (fromTimer) {
+          chooseRandomArenaMove();
+        } else {
+          window.alert("Нужно выбрать и удар, и защиту.");
+          return;
+        }
+      }
+
+      stopArenaTurnTimer();
+      const chooserIndex = state.pvp.currentChooser;
+      state.pvp.choices[chooserIndex] = {
+        attack: state.pvp.pendingChoice.attack,
+        defense: state.pvp.pendingChoice.defense
+      };
+
+      if (chooserIndex === 0) {
+        state.pvp.currentChooser = 1;
+        state.pvp.pendingChoice = { attack: "", defense: "" };
+        state.pvp.timerLeft = PVP_TURN_SECONDS;
+        state.pvp.log = [`Ход ${state.pvp.fighters[0].name} скрыт. Теперь выбирает ${state.pvp.fighters[1].name}.`];
+        renderPvpScreen();
+        startArenaTurnTimer();
+        return;
+      }
+
+      resolveArenaRound();
+    }
+
+    function calculateArenaDamage(attacker, defender, attackZone, defenseZone) {
+      if (attackZone === defenseZone) {
+        return {
+          damage: 0,
+          blocked: true
+        };
+      }
+
+      const weapon = getWeaponById(attacker.weaponId);
+      const guardItem = attackZone === "head" ? getHelmetById(defender.helmetId) : getArmorById(defender.armorId);
+      const baseDamage = attackZone === "head" ? weapon.damageHead : weapon.damageBody;
+      const damage = Math.max(0, baseDamage - guardItem.guard);
+
+      return {
+        damage,
+        blocked: false
+      };
+    }
+
+    function resolveArenaRound() {
+      const fighters = state.pvp.fighters;
+      const choiceOne = state.pvp.choices[0];
+      const choiceTwo = state.pvp.choices[1];
+      const hitToTwo = calculateArenaDamage(fighters[0], fighters[1], choiceOne.attack, choiceTwo.defense);
+      const hitToOne = calculateArenaDamage(fighters[1], fighters[0], choiceTwo.attack, choiceOne.defense);
+      let healedOne = 0;
+      let healedTwo = 0;
+
+      fighters[0].hp = Math.max(0, fighters[0].hp - hitToOne.damage);
+      fighters[1].hp = Math.max(0, fighters[1].hp - hitToTwo.damage);
+      fighters[0].lastDamage = hitToOne.damage;
+      fighters[1].lastDamage = hitToTwo.damage;
+      progress.pvp.rounds += 1;
+
+      if (hitToOne.damage === 0) {
+        healedOne = Math.min(2, fighters[0].maxHp - fighters[0].hp);
+        fighters[0].hp += healedOne;
+      }
+      if (hitToTwo.damage === 0) {
+        healedTwo = Math.min(2, fighters[1].maxHp - fighters[1].hp);
+        fighters[1].hp += healedTwo;
+      }
+
+      state.pvp.phase = "resolve";
+      state.pvp.log = [
+        `${fighters[0].name}: удар в ${choiceOne.attack === "head" ? "голову" : "корпус"}, защита ${choiceOne.defense === "head" ? "головы" : "корпуса"}.`,
+        `${fighters[1].name}: удар в ${choiceTwo.attack === "head" ? "голову" : "корпус"}, защита ${choiceTwo.defense === "head" ? "головы" : "корпуса"}.`,
+        hitToTwo.damage > 0
+          ? `${fighters[0].name} попал по ${fighters[1].name} и нанёс ${hitToTwo.damage} урона.`
+          : `${fighters[1].name} защитился от удара ${fighters[0].name}.`,
+        hitToOne.damage > 0
+          ? `${fighters[1].name} попал по ${fighters[0].name} и нанёс ${hitToOne.damage} урона.`
+          : `${fighters[0].name} защитился от удара ${fighters[1].name}.`
+      ];
+      if (healedOne > 0) {
+        state.pvp.log.push(`${fighters[0].name} восстановил ${healedOne} HP, потому что не пропустил удар.`);
+      }
+      if (healedTwo > 0) {
+        state.pvp.log.push(`${fighters[1].name} восстановил ${healedTwo} HP, потому что не пропустил удар.`);
+      }
+
+      playSound(hitToOne.damage > 0 || hitToTwo.damage > 0 ? "correct" : "wrong");
+
+      if (hitToTwo.damage > 0) {
+        animateNode(dom.arenaFighter1, "hero-hit");
+      }
+      if (hitToOne.damage > 0) {
+        animateNode(dom.arenaFighter0, "hero-hit");
+      }
+      if (hitToTwo.damage === 0) {
+        animateNode(dom.arenaFighter1, "flash-correct");
+      }
+      if (hitToOne.damage === 0) {
+        animateNode(dom.arenaFighter0, "flash-correct");
+      }
+
+      renderPvpScreen();
+
+      const finished = fighters.some((fighter) => fighter.hp <= 0);
+      state.pendingTimer = window.setTimeout(() => {
+        if (finished) {
+          const winnerIndex = fighters[0].hp === fighters[1].hp
+            ? null
+            : fighters[0].hp > fighters[1].hp ? 0 : 1;
+          finishPvpMatch(winnerIndex);
+          return;
+        }
+
+        state.pvp.round += 1;
+        state.pvp.phase = "choose";
+        state.pvp.currentChooser = 0;
+        state.pvp.choices = [null, null];
+        state.pvp.pendingChoice = { attack: "", defense: "" };
+        state.pvp.timerLeft = PVP_TURN_SECONDS;
+        state.pvp.log = [`Раунд ${state.pvp.round}. ${fighters[0].name} снова выбирает скрытый ход.`];
+        renderPvpScreen();
+        startArenaTurnTimer();
+      }, 1700);
+    }
+
     function renderFeedback(node, text, wasCorrect) {
       node.textContent = text;
       node.classList.remove("good", "soft");
@@ -3111,6 +4329,7 @@
 
       if (correct) {
         player.score += 10;
+        awardCoins(5);
         state.sessionScore = player.score;
         state.sessionCorrect += 1;
         progress.correctAnswers += 1;
@@ -3167,6 +4386,7 @@
 
       if (correct) {
         player.score += 10;
+        awardCoins(5);
         state.sessionScore = player.score;
         state.sessionCorrect += 1;
         progress.correctAnswers += 1;
@@ -3212,6 +4432,14 @@
       if (category === "numbers") {
         progress.categoryCorrect.numbers += 1;
       }
+      if (category === "reading") {
+        progress.categoryCorrect.reading += 1;
+        progress.categoryCorrect.letters += 1;
+      }
+      if (category === "math") {
+        progress.categoryCorrect.math += 1;
+        progress.categoryCorrect.numbers += 1;
+      }
     }
 
     function collectAchievements(context = {}) {
@@ -3246,6 +4474,7 @@
       progress.bestScore = Math.max(progress.bestScore, player.score);
 
       if (success) {
+        awardCoins(12);
         progress.levelsCompleted += 1;
         progress.battleLevel += 1;
         collectAchievements({ battleWon: true });
@@ -3255,7 +4484,13 @@
           emoji: "🎉",
           title: "Монстр побеждён!",
           text: "Ты отлично справился и помог герою пройти дальше.",
-          nextLabel: `Следующий уровень: ${progress.battleLevel}`
+          nextLabel: `Следующий уровень: ${progress.battleLevel}`,
+          cards: [
+            { label: "Очки", value: player.score },
+            { label: "Правильных", value: state.sessionCorrect },
+            { label: "Ошибок", value: state.sessionMistakes },
+            { label: "Монеты", value: `+${12 + state.sessionCorrect * 5}` }
+          ]
         };
       } else {
         state.result = {
@@ -3263,7 +4498,13 @@
           emoji: "💛",
           title: "Давай попробуем ещё раз!",
           text: "Монстрик ещё остался на поле, но ты уже молодец. Попробуй ещё раз, ты справишься!",
-          nextLabel: `Повторить уровень ${state.level}`
+          nextLabel: `Повторить уровень ${state.level}`,
+          cards: [
+            { label: "Очки", value: player.score },
+            { label: "Правильных", value: state.sessionCorrect },
+            { label: "Ошибок", value: state.sessionMistakes },
+            { label: "Монеты", value: `+${state.sessionCorrect * 5}` }
+          ]
         };
       }
 
@@ -3279,6 +4520,7 @@
       progress.bestScore = Math.max(progress.bestScore, player.score);
 
       if (success) {
+        awardCoins(15);
         progress.levelsCompleted += 1;
         progress.raceLevel += 1;
         collectAchievements({ raceWon: true });
@@ -3288,7 +4530,13 @@
           emoji: "🏁",
           title: "Ты доехал до финиша!",
           text: "Машинка пересекла финишную линию. Отличная гонка!",
-          nextLabel: `Следующая трасса: ${progress.raceLevel}`
+          nextLabel: `Следующая трасса: ${progress.raceLevel}`,
+          cards: [
+            { label: "Очки", value: player.score },
+            { label: "Правильных", value: state.sessionCorrect },
+            { label: "Ошибок", value: state.sessionMistakes },
+            { label: "Монеты", value: `+${15 + state.sessionCorrect * 5}` }
+          ]
         };
       } else {
         state.result = {
@@ -3296,7 +4544,13 @@
           emoji: "🚗",
           title: "Ещё один заезд?",
           text: "Финиш уже близко. Давай попробуем ещё раз и доедем до конца!",
-          nextLabel: `Повторить трассу ${state.level}`
+          nextLabel: `Повторить трассу ${state.level}`,
+          cards: [
+            { label: "Очки", value: player.score },
+            { label: "Правильных", value: state.sessionCorrect },
+            { label: "Ошибок", value: state.sessionMistakes },
+            { label: "Монеты", value: `+${state.sessionCorrect * 5}` }
+          ]
         };
       }
 
@@ -3305,18 +4559,52 @@
       setScreen("result");
     }
 
+    function finishPvpMatch(winnerIndex) {
+      clearPendingTimer();
+      stopArenaTurnTimer();
+      const fighters = state.pvp.fighters;
+      const winner = winnerIndex === null ? null : fighters[winnerIndex];
+
+      progress.pvp.battles += 1;
+      if (winner) {
+        progress.pvp.wins += 1;
+      }
+
+      state.result = {
+        success: true,
+        emoji: winner ? "🥇" : "🤝",
+        title: winner ? `${winner.name} победил!` : "Ничья на арене!",
+        text: winner
+          ? `${winner.name} оказался быстрее и точнее в защите и атаке.`
+          : "Оба игрока продержались одинаково долго. Можно устроить реванш!",
+        nextLabel: "Новая дуэль",
+        cards: [
+          { label: fighters[0].name, value: `${fighters[0].hp} HP` },
+          { label: fighters[1].name, value: `${fighters[1].hp} HP` },
+          { label: "Раундов в бою", value: state.pvp.round },
+          { label: "Дуэлей", value: progress.pvp.battles }
+        ]
+      };
+
+      saveProgress();
+      renderResultScreen();
+      setScreen("result");
+    }
+
     function renderResultScreen() {
-      const player = getActivePlayer();
       const result = state.result;
+      const player = getActivePlayer();
 
       dom.resultEmoji.textContent = result.emoji;
       dom.resultTitle.textContent = result.title;
       dom.resultText.textContent = result.text;
       dom.nextLevelBtn.textContent = result.nextLabel;
-      dom.retryBtn.textContent = result.success ? "Сыграть ещё раз" : "Попробовать ещё раз";
-      dom.nextLevelBtn.classList.toggle("hidden", !result.success);
+      dom.retryBtn.textContent = state.gameType === "pvp"
+        ? "Реванш"
+        : result.success ? "Сыграть ещё раз" : "Попробовать ещё раз";
+      dom.nextLevelBtn.classList.toggle("hidden", !result.success && state.gameType !== "pvp");
 
-      const resultCards = [
+      const resultCards = result.cards || [
         { label: "Очки", value: player.score },
         { label: "Правильных", value: state.sessionCorrect },
         { label: "Ошибок", value: state.sessionMistakes },
@@ -3411,8 +4699,10 @@
       }
 
       clearPendingTimer();
+      stopArenaTurnTimer();
       stopSpeech();
       progress = createDefaultProgress();
+      normalizeProgressData();
       saveProgress();
       setCloudStatus(
         isCloudReady()
@@ -3437,6 +4727,13 @@
       dom.modeBackBtn.addEventListener("click", goToMenu);
       dom.battleMenuBtn.addEventListener("click", goToMenu);
       dom.raceMenuBtn.addEventListener("click", goToMenu);
+      dom.arenaMenuBtn.addEventListener("click", goToMenu);
+      dom.arenaStartBtn.addEventListener("click", startArenaMatch);
+      dom.arenaConfirmBtn.addEventListener("click", () => commitArenaChoice(false));
+      dom.arenaRandomBtn.addEventListener("click", () => {
+        chooseRandomArenaMove();
+        commitArenaChoice(false);
+      });
       dom.resultMenuBtn.addEventListener("click", goToMenu);
       dom.statsMenuBtn.addEventListener("click", goToMenu);
       dom.resetProgressBtn.addEventListener("click", resetProgress);
@@ -3448,6 +4745,23 @@
       dom.modeCards.forEach((button) => {
         button.addEventListener("click", () => {
           startGame(button.dataset.game, button.dataset.mode);
+        });
+      });
+
+      [
+        dom.arenaNameInput0,
+        dom.arenaNameInput1,
+        dom.arenaWeaponSelect0,
+        dom.arenaWeaponSelect1,
+        dom.arenaHelmetSelect0,
+        dom.arenaHelmetSelect1,
+        dom.arenaArmorSelect0,
+        dom.arenaArmorSelect1
+      ].forEach((field) => {
+        field.addEventListener("change", () => {
+          if (state.pvp && state.pvp.phase === "setup") {
+            renderPvpScreen();
+          }
         });
       });
 
