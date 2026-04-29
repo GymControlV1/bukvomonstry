@@ -289,6 +289,59 @@
       border: 2px solid rgba(91, 141, 239, 0.16);
     }
 
+    .compact-cloud-card {
+      background: linear-gradient(145deg, rgba(245, 250, 255, 0.96) 0%, rgba(255, 253, 246, 0.98) 100%);
+      border-color: rgba(91, 141, 239, 0.12);
+      padding: 16px;
+    }
+
+    .compact-cloud-card strong {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .compact-cloud-card p {
+      font-size: 14px;
+    }
+
+    .compact-cloud-card .account-panel,
+    .compact-cloud-card .cloud-panel {
+      padding: 12px;
+      gap: 8px;
+      border-radius: 18px;
+    }
+
+    .compact-cloud-card .account-avatar {
+      width: 44px;
+      height: 44px;
+    }
+
+    .compact-cloud-card .account-avatar.fallback {
+      font-size: 20px;
+    }
+
+    .compact-cloud-card .account-name {
+      font-size: 17px;
+    }
+
+    .compact-cloud-card .account-email {
+      font-size: 13px;
+    }
+
+    .compact-cloud-card .google-widget-wrap {
+      min-height: 42px;
+    }
+
+    .compact-cloud-card .button-row {
+      margin-top: 12px;
+    }
+
+    .compact-cloud-card button {
+      min-height: 48px;
+      padding: 12px 18px;
+      font-size: 15px;
+    }
+
     .cloud-panel {
       background: rgba(255, 255, 255, 0.82);
       border-radius: var(--radius-lg);
@@ -1392,20 +1445,9 @@
           </div>
 
           <div class="feature-card cloud-card">
-            <strong>Аккаунт, облако и рейтинг</strong>
-            <p>Войди через Google, чтобы прогресс был доступен на телефоне, планшете и компьютере, а ещё чтобы попасть в общий рейтинг игроков.</p>
-            <div id="home-account-panel" class="account-panel">
-              <div id="home-account-summary"></div>
-              <div id="home-google-widget" class="google-widget-wrap"></div>
-            </div>
-            <div id="home-cloud-panel" class="cloud-panel"></div>
+            <strong>Топ игроков</strong>
+            <p>Здесь видно, кто уже набрал больше всего очков в БуквоМонстрах.</p>
             <div id="home-leaderboard-panel" class="cloud-panel"></div>
-            <div class="button-row" style="margin-top: 14px;">
-              <button id="setupCloudBtn" class="secondary-btn">Настроить облако</button>
-              <button id="cloudLoadBtn" class="accent-btn">Загрузить из облака</button>
-              <button id="cloudSaveBtn" class="primary-btn">Сохранить в облако</button>
-              <button id="cloudLogoutBtn" class="ghost-btn hidden" type="button">Выйти из Google</button>
-            </div>
           </div>
 
           <div class="menu-grid">
@@ -1428,6 +1470,22 @@
           <div class="button-row">
             <button id="startGameBtn" class="primary-btn">Начать игру</button>
             <button id="startStatsBtn" class="accent-btn">Открыть статистику</button>
+          </div>
+
+          <div class="feature-card cloud-card compact-cloud-card">
+            <strong>Для родителей: Google и облако</strong>
+            <p>Нижний блок нужен для входа и сохранения прогресса между устройствами.</p>
+            <div id="home-account-panel" class="account-panel">
+              <div id="home-account-summary"></div>
+              <div id="home-google-widget" class="google-widget-wrap"></div>
+            </div>
+            <div id="home-cloud-panel" class="cloud-panel"></div>
+            <div class="button-row" style="margin-top: 14px;">
+              <button id="setupCloudBtn" class="secondary-btn">Настроить облако</button>
+              <button id="cloudLoadBtn" class="accent-btn">Загрузить из облака</button>
+              <button id="cloudSaveBtn" class="primary-btn">Сохранить в облако</button>
+              <button id="cloudLogoutBtn" class="ghost-btn hidden" type="button">Выйти из Google</button>
+            </div>
           </div>
         </div>
       </section>
