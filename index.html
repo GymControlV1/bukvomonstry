@@ -1451,6 +1451,12 @@
       font-weight: 700;
     }
 
+    .mode-active {
+      background: linear-gradient(135deg, #fff7dd 0%, #ffe8a3 100%);
+      border-color: rgba(255, 183, 3, 0.42);
+      color: #8f5a00;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -1937,7 +1943,7 @@
               </div>
               <div class="status-tile">
                 <strong>Таймер</strong>
-                <span id="arenaTimerLabel">7</span>
+                <span id="arenaTimerLabel">30</span>
               </div>
               <div class="status-tile">
                 <strong>Ход</strong>
@@ -1975,9 +1981,16 @@
           </div>
 
           <div class="card question-card">
-            <p class="question-label">Локальный мультиплеер</p>
+            <p id="arenaModeLabel" class="question-label">Арена</p>
             <h2 id="arenaPromptTitle" class="question-title">Подготовь игроков к бою</h2>
             <p id="arenaPromptText" class="section-text">Сначала выберите имена и снаряжение из купленных предметов.</p>
+
+            <div id="arenaModeButtons" class="button-row">
+              <button id="arenaLocalModeBtn" class="secondary-btn" type="button">Локально</button>
+              <button id="arenaAiModeBtn" class="secondary-btn" type="button">Против компьютера</button>
+              <button id="arenaTutorialModeBtn" class="secondary-btn" type="button">Тренировка</button>
+              <button id="arenaOnlineModeBtn" class="secondary-btn" type="button">Онлайн</button>
+            </div>
 
             <div id="arenaSetupPanel" class="arena-form">
               <div class="arena-input-grid">
@@ -2021,6 +2034,22 @@
               <div class="button-row">
                 <button id="arenaStartBtn" class="primary-btn" type="button">Начать дуэль</button>
                 <button id="arenaMenuBtn" class="secondary-btn" type="button">Вернуться в меню</button>
+              </div>
+            </div>
+
+            <div id="arenaOnlinePanel" class="stack-md hidden">
+              <div class="cloud-panel">
+                <div class="button-row">
+                  <button id="arenaCreateRoomBtn" class="primary-btn" type="button">Создать комнату</button>
+                  <button id="arenaRefreshRoomsBtn" class="secondary-btn" type="button">Обновить список</button>
+                  <button id="arenaCancelRoomBtn" class="ghost-btn hidden" type="button">Закрыть мою комнату</button>
+                </div>
+                <div id="arenaOnlineStatus" class="subtle-note">Войди через Google, чтобы создавать онлайн-дуэли и подключаться к ним.</div>
+              </div>
+
+              <div class="cloud-panel">
+                <strong>Готовые к бою игроки</strong>
+                <div id="arenaRoomsList" class="leaderboard-list"></div>
               </div>
             </div>
 
@@ -2134,7 +2163,7 @@
     const LEADERBOARD_LIMIT = 20;
     const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAHqlv_XUprxqxxYMqyTboDP_zi6ft0cMl5PH4DLlr3QTKjR1kcCBU_SeROijKRFPZyA/exec";
     const DEFAULT_GOOGLE_CLIENT_ID = "355161249555-b2sssv764jqvvf1p25i5pm2oem1ffmnp.apps.googleusercontent.com";
-    const PVP_TURN_SECONDS = 7;
+    const PVP_TURN_SECONDS = 30;
     const NUMBER_VALUES = Array.from({ length: 20 }, (_, index) => index + 1);
     const HEROES = [
       { id: "hero-1", name: "Супергерой", emoji: "🦸‍♂️" },
@@ -2311,9 +2340,21 @@
       arenaHpText1: document.getElementById("arenaHpText1"),
       arenaHpFill0: document.getElementById("arenaHpFill0"),
       arenaHpFill1: document.getElementById("arenaHpFill1"),
+      arenaModeLabel: document.getElementById("arenaModeLabel"),
       arenaPromptTitle: document.getElementById("arenaPromptTitle"),
       arenaPromptText: document.getElementById("arenaPromptText"),
+      arenaModeButtons: document.getElementById("arenaModeButtons"),
+      arenaLocalModeBtn: document.getElementById("arenaLocalModeBtn"),
+      arenaAiModeBtn: document.getElementById("arenaAiModeBtn"),
+      arenaTutorialModeBtn: document.getElementById("arenaTutorialModeBtn"),
+      arenaOnlineModeBtn: document.getElementById("arenaOnlineModeBtn"),
       arenaSetupPanel: document.getElementById("arenaSetupPanel"),
+      arenaOnlinePanel: document.getElementById("arenaOnlinePanel"),
+      arenaRoomsList: document.getElementById("arenaRoomsList"),
+      arenaOnlineStatus: document.getElementById("arenaOnlineStatus"),
+      arenaCreateRoomBtn: document.getElementById("arenaCreateRoomBtn"),
+      arenaRefreshRoomsBtn: document.getElementById("arenaRefreshRoomsBtn"),
+      arenaCancelRoomBtn: document.getElementById("arenaCancelRoomBtn"),
       arenaChoicePanel: document.getElementById("arenaChoicePanel"),
       arenaLogPanel: document.getElementById("arenaLogPanel"),
       arenaNameInput0: document.getElementById("arenaNameInput0"),
@@ -2429,7 +2470,8 @@
           battles: 0,
           wins: 0,
           losses: 0,
-          rounds: 0
+          rounds: 0,
+          tutorialDone: false
         }
       };
     }
@@ -2732,6 +2774,7 @@
 
     function createPvpMatch() {
       return {
+        submode: progress.pvp.tutorialDone ? "local" : "tutorial",
         phase: "setup",
         round: 1,
         currentChooser: 0,
@@ -2743,7 +2786,24 @@
           attack: "",
           defense: ""
         },
-        log: ["Сначала выберите имена и экипировку для обоих игроков."]
+        computerLoadout: {
+          weaponId: "",
+          helmetId: "",
+          armorId: ""
+        },
+        tutorialHintKey: "",
+        online: {
+          rooms: [],
+          myRooms: [],
+          currentRoom: null,
+          pollTimerId: null,
+          loading: false,
+          requestBusy: false,
+          lastLoadedAt: "",
+          error: "",
+          finishedKey: ""
+        },
+        log: ["Сначала выберите режим арены и подготовьте бойцов."]
       };
     }
 
@@ -2935,6 +2995,7 @@
     function goToMenu() {
       clearPendingTimer();
       stopArenaTurnTimer();
+      stopArenaOnlinePolling();
       stopSpeech();
       state.gameType = null;
       state.mode = null;
@@ -3521,6 +3582,7 @@
     function openStats() {
       clearPendingTimer();
       stopArenaTurnTimer();
+      stopArenaOnlinePolling();
       stopSpeech();
       renderStatsScreen();
       setScreen("stats");
@@ -3529,6 +3591,7 @@
     function startGame(gameType, mode) {
       clearPendingTimer();
       stopArenaTurnTimer();
+      stopArenaOnlinePolling();
       stopSpeech();
       state.gameType = gameType;
       state.mode = mode;
@@ -3554,6 +3617,9 @@
         state.pvp = createPvpMatch();
         setScreen("pvp");
         renderPvpScreen();
+        if (state.pvp.submode === "tutorial") {
+          maybeSpeakArenaTutorial("setup");
+        }
         return;
       }
 
@@ -3994,10 +4060,160 @@
       select.value = items.some((item) => item.id === selectedId) ? selectedId : items[0].id;
     }
 
+    function getArenaSubmodeLabel(mode) {
+      return {
+        local: "Локально",
+        ai: "Против компьютера",
+        tutorial: "Тренировка",
+        online: "Онлайн"
+      }[mode] || "Арена";
+    }
+
+    function getArenaSelectedLoadout(index) {
+      return {
+        weaponId: index === 0
+          ? (dom.arenaWeaponSelect0.value || progress.shop.equippedWeapon)
+          : (dom.arenaWeaponSelect1.value || progress.shop.equippedWeapon),
+        helmetId: index === 0
+          ? (dom.arenaHelmetSelect0.value || progress.shop.equippedHelmet)
+          : (dom.arenaHelmetSelect1.value || progress.shop.equippedHelmet),
+        armorId: index === 0
+          ? (dom.arenaArmorSelect0.value || progress.shop.equippedArmor)
+          : (dom.arenaArmorSelect1.value || progress.shop.equippedArmor)
+      };
+    }
+
+    function getArenaComputerLoadout(tutorialMode = false) {
+      if (tutorialMode) {
+        return {
+          weaponId: "hands",
+          helmetId: "none",
+          armorId: "none"
+        };
+      }
+
+      return {
+        weaponId: randomItem(progress.shop.ownedWeapons),
+        helmetId: randomItem(progress.shop.ownedHelmets),
+        armorId: randomItem(progress.shop.ownedArmors)
+      };
+    }
+
+    function getArenaControlledIndex() {
+      if (!state.pvp) {
+        return 0;
+      }
+
+      if (state.pvp.submode === "online") {
+        const room = state.pvp.online.currentRoom;
+        if (room && room.myRole === "guest") {
+          return 1;
+        }
+        return 0;
+      }
+
+      if (state.pvp.submode === "local") {
+        return null;
+      }
+
+      return 0;
+    }
+
+    function describeArenaZone(zone) {
+      return zone === "head" ? "голову" : "корпус";
+    }
+
+    function describeArenaBlockAction(defender, zone) {
+      const item = zone === "head" ? getHelmetById(defender.helmetId) : getArmorById(defender.armorId);
+      if (item.id === "none") {
+        return zone === "head"
+          ? `${defender.name} присел и увёл голову от удара.`
+          : `${defender.name} увернулся и убрал корпус от удара.`;
+      }
+
+      return zone === "head"
+        ? `${defender.name} прикрыл голову предметом «${item.name}».`
+        : `${defender.name} закрыл корпус предметом «${item.name}».`;
+    }
+
+    function createArenaPreviewFighter(index) {
+      const submode = state.pvp?.submode || "local";
+      if (submode === "online") {
+        if (index === 0) {
+          const loadout = {
+            weaponId: progress.shop.equippedWeapon,
+            helmetId: progress.shop.equippedHelmet,
+            armorId: progress.shop.equippedArmor
+          };
+          return {
+            name: getDisplayPlayerName(),
+            emoji: HEROES[0].emoji,
+            maxHp: 100,
+            hp: 100,
+            ...loadout
+          };
+        }
+
+        return {
+          name: "Соперник онлайн",
+          emoji: "⚔️",
+          maxHp: 100,
+          hp: 100,
+          weaponId: "hands",
+          helmetId: "none",
+          armorId: "none"
+        };
+      }
+
+      if (submode === "ai" || submode === "tutorial") {
+        const computerLoadout = state.pvp.computerLoadout.weaponId
+          ? state.pvp.computerLoadout
+          : getArenaComputerLoadout(submode === "tutorial");
+
+        if (index === 0) {
+          const loadout = getArenaSelectedLoadout(0);
+          return {
+            name: String(dom.arenaNameInput0.value || getDisplayPlayerName()).trim() || getDisplayPlayerName(),
+            emoji: HEROES[0].emoji,
+            maxHp: 100,
+            hp: 100,
+            ...loadout
+          };
+        }
+
+        return {
+          name: submode === "tutorial" ? "Тренер-робот" : "Компьютер",
+          emoji: submode === "tutorial" ? "🤖" : "👾",
+          maxHp: 100,
+          hp: 100,
+          ...computerLoadout
+        };
+      }
+
+      const loadout = getArenaSelectedLoadout(index);
+      return {
+        name: String(index === 0 ? dom.arenaNameInput0.value : dom.arenaNameInput1.value).trim() || `Игрок ${index + 1}`,
+        emoji: HEROES[index] ? HEROES[index].emoji : "🧒",
+        maxHp: 100,
+        hp: 100,
+        ...loadout
+      };
+    }
+
     function renderArenaSetupOptions() {
+      const submode = state.pvp?.submode || "local";
+      const soloMode = submode === "ai" || submode === "tutorial";
       const ownedWeapons = getOwnedItems(WEAPONS, progress.shop.ownedWeapons);
       const ownedHelmets = getOwnedItems(HELMETS, progress.shop.ownedHelmets);
       const ownedArmors = getOwnedItems(ARMORS, progress.shop.ownedArmors);
+
+      if (!dom.arenaNameInput0.value.trim() || dom.arenaNameInput0.value === "Игрок 1") {
+        dom.arenaNameInput0.value = getDisplayPlayerName();
+      }
+      if (!dom.arenaNameInput1.value.trim()) {
+        dom.arenaNameInput1.value = "Игрок 2";
+      }
+
       const selected = {
         weapon0: progress.shop.ownedWeapons.includes(dom.arenaWeaponSelect0.value) ? dom.arenaWeaponSelect0.value : progress.shop.equippedWeapon,
         weapon1: progress.shop.ownedWeapons.includes(dom.arenaWeaponSelect1.value) ? dom.arenaWeaponSelect1.value : progress.shop.equippedWeapon,
@@ -4007,12 +4223,35 @@
         armor1: progress.shop.ownedArmors.includes(dom.arenaArmorSelect1.value) ? dom.arenaArmorSelect1.value : progress.shop.equippedArmor
       };
 
+      if (soloMode && !state.pvp.computerLoadout.weaponId) {
+        state.pvp.computerLoadout = getArenaComputerLoadout(submode === "tutorial");
+      }
+
       fillArenaSelect(dom.arenaWeaponSelect0, ownedWeapons, selected.weapon0);
-      fillArenaSelect(dom.arenaWeaponSelect1, ownedWeapons, selected.weapon1);
       fillArenaSelect(dom.arenaHelmetSelect0, ownedHelmets, selected.helmet0);
-      fillArenaSelect(dom.arenaHelmetSelect1, ownedHelmets, selected.helmet1);
       fillArenaSelect(dom.arenaArmorSelect0, ownedArmors, selected.armor0);
-      fillArenaSelect(dom.arenaArmorSelect1, ownedArmors, selected.armor1);
+
+      if (soloMode) {
+        dom.arenaNameInput1.value = submode === "tutorial" ? "Тренер-робот" : "Компьютер";
+        fillArenaSelect(dom.arenaWeaponSelect1, ownedWeapons, state.pvp.computerLoadout.weaponId);
+        fillArenaSelect(dom.arenaHelmetSelect1, ownedHelmets, state.pvp.computerLoadout.helmetId);
+        fillArenaSelect(dom.arenaArmorSelect1, ownedArmors, state.pvp.computerLoadout.armorId);
+      } else {
+        fillArenaSelect(dom.arenaWeaponSelect1, ownedWeapons, selected.weapon1);
+        fillArenaSelect(dom.arenaHelmetSelect1, ownedHelmets, selected.helmet1);
+        fillArenaSelect(dom.arenaArmorSelect1, ownedArmors, selected.armor1);
+      }
+
+      dom.arenaNameInput1.disabled = soloMode;
+      dom.arenaWeaponSelect1.disabled = soloMode;
+      dom.arenaHelmetSelect1.disabled = soloMode;
+      dom.arenaArmorSelect1.disabled = soloMode;
+
+      dom.arenaStartBtn.textContent = submode === "tutorial"
+        ? "Начать тренировку"
+        : submode === "ai"
+          ? "Старт против компьютера"
+          : "Начать дуэль";
     }
 
     function renderArenaChoiceButtons(container, selectedValue, type) {
@@ -4033,6 +4272,22 @@
       });
     }
 
+    function stopArenaOnlinePolling() {
+      if (state.pvp && state.pvp.online && state.pvp.online.pollTimerId) {
+        window.clearInterval(state.pvp.online.pollTimerId);
+        state.pvp.online.pollTimerId = null;
+      }
+    }
+
+    function calculateArenaDeadlineSeconds(deadlineAt) {
+      if (!deadlineAt) {
+        return PVP_TURN_SECONDS;
+      }
+
+      const diff = Math.ceil((new Date(deadlineAt).getTime() - Date.now()) / 1000);
+      return Math.max(0, diff);
+    }
+
     function stopArenaTurnTimer() {
       if (state.pvp && state.pvp.turnTimerId) {
         window.clearInterval(state.pvp.turnTimerId);
@@ -4042,7 +4297,45 @@
 
     function startArenaTurnTimer() {
       stopArenaTurnTimer();
-      if (!state.pvp || state.pvp.phase !== "choose") {
+      if (!state.pvp) {
+        return;
+      }
+
+      if (state.pvp.submode === "online") {
+        const room = state.pvp.online.currentRoom;
+        if (!room || room.status !== "active" || room.phase !== "planning") {
+          return;
+        }
+
+        const tick = () => {
+          if (!state.pvp || state.pvp.submode !== "online") {
+            stopArenaTurnTimer();
+            return;
+          }
+
+          const latestRoom = state.pvp.online.currentRoom;
+          if (!latestRoom || latestRoom.status !== "active" || latestRoom.phase !== "planning") {
+            stopArenaTurnTimer();
+            dom.arenaTimerLabel.textContent = "—";
+            return;
+          }
+
+          state.pvp.timerLeft = calculateArenaDeadlineSeconds(latestRoom.deadlineAt);
+          dom.arenaTimerLabel.textContent = state.pvp.timerLeft;
+          if (state.pvp.timerLeft <= 0) {
+            stopArenaTurnTimer();
+            if (!latestRoom.myChoiceSubmitted) {
+              commitArenaChoice(true);
+            }
+          }
+        };
+
+        tick();
+        state.pvp.turnTimerId = window.setInterval(tick, 1000);
+        return;
+      }
+
+      if (state.pvp.phase !== "choose") {
         return;
       }
 
@@ -4060,70 +4353,91 @@
       }, 1000);
     }
 
-    function renderPvpScreen() {
+    function maybeSpeakArenaTutorial(key) {
+      if (!state.pvp || state.pvp.submode !== "tutorial") {
+        return;
+      }
+      if (state.pvp.tutorialHintKey === key) {
+        return;
+      }
+
+      const scripts = {
+        setup: "Это тренировочный бой. Сначала выбери удар и защиту. Даже без шлема и брони можно защититься: голову прячем приседанием, а корпус уводим в сторону.",
+        choose: "Сейчас выбери, куда бьёшь, и что защищаешь. У тебя есть тридцать секунд. Можно нажать кнопку ход сделан, а можно дождаться конца времени.",
+        resolve: "Если соперник не прикрыл нужную часть тела, удар проходит. Если прикрыл, он отбивается или уворачивается.",
+        finish: "Тренировка закончилась. Монеты знаний зарабатываются в играх с буквами и цифрами, а потом тратятся на прокачку бойца в магазине арены."
+      };
+      const text = scripts[key];
+      if (!text) {
+        return;
+      }
+
+      state.pvp.tutorialHintKey = key;
+      speakText(text);
+    }
+
+    function setPvpSubmode(mode) {
       if (!state.pvp) {
         return;
       }
 
-      const fighters = state.pvp.fighters;
-      const currentIndex = state.pvp.currentChooser;
-      const currentName = fighters[currentIndex] ? fighters[currentIndex].name : "Игрок";
+      clearPendingTimer();
+      stopArenaTurnTimer();
+      stopArenaOnlinePolling();
+      stopSpeech();
 
-      dom.arenaRoundLabel.textContent = `Раунд ${state.pvp.round}`;
-      dom.arenaCoinsLabel.textContent = progress.coins;
-      dom.arenaTimerLabel.textContent = state.pvp.phase === "choose" ? state.pvp.timerLeft : "—";
-      dom.arenaTurnLabel.textContent = state.pvp.phase === "setup"
-        ? "Подготовка"
-        : state.pvp.phase === "choose"
-          ? currentName
-          : "Разбор хода";
+      const nextMode = ["local", "ai", "tutorial", "online"].includes(mode) ? mode : "local";
+      const nextMatch = createPvpMatch();
+      nextMatch.submode = nextMode;
+      nextMatch.log = [
+        nextMode === "online"
+          ? "В онлайне можно создать комнату и ждать второго игрока или подключиться к готовому бою."
+          : nextMode === "tutorial"
+            ? "Тренировочный дуэльный бой подскажет, как атаковать, защищаться и тратить монеты на прокачку."
+            : nextMode === "ai"
+              ? "Если онлайн-соперников нет, можно сразиться с компьютером."
+              : "Локальный бой идёт на одном устройстве: сначала выбирает игрок 1, потом игрок 2."
+      ];
+      nextMatch.computerLoadout = getArenaComputerLoadout(nextMode === "tutorial");
+      state.pvp = nextMatch;
 
-      if (state.pvp.phase === "setup") {
-        renderArenaSetupOptions();
+      if (!dom.arenaNameInput0.value.trim() || dom.arenaNameInput0.value === "Игрок 1") {
+        dom.arenaNameInput0.value = getDisplayPlayerName();
+      }
+      if (nextMode === "local" && !dom.arenaNameInput1.value.trim()) {
+        dom.arenaNameInput1.value = "Игрок 2";
       }
 
-      [0, 1].forEach((index) => {
-        const fighter = fighters[index];
-        const fallbackName = index === 0 ? dom.arenaNameInput0.value : dom.arenaNameInput1.value;
-        const name = fighter ? fighter.name : (fallbackName || `Игрок ${index + 1}`);
-        const weaponId = fighter ? fighter.weaponId : (index === 0 ? dom.arenaWeaponSelect0.value : dom.arenaWeaponSelect1.value) || progress.shop.equippedWeapon;
-        const helmetId = fighter ? fighter.helmetId : (index === 0 ? dom.arenaHelmetSelect0.value : dom.arenaHelmetSelect1.value) || progress.shop.equippedHelmet;
-        const armorId = fighter ? fighter.armorId : (index === 0 ? dom.arenaArmorSelect0.value : dom.arenaArmorSelect1.value) || progress.shop.equippedArmor;
-        const hp = fighter ? fighter.hp : 100;
-        const maxHp = fighter ? fighter.maxHp : 100;
-        const hpPercent = (hp / maxHp) * 100;
-
-        dom[`arenaName${index}`].textContent = name;
-        dom[`arenaLoadout${index}`].textContent = getPlayerWeaponSummary(weaponId, helmetId, armorId);
-        dom[`arenaHpText${index}`].textContent = `${hp} / ${maxHp}`;
-        dom[`arenaHpFill${index}`].style.width = `${hpPercent}%`;
-      });
-
-      dom.arenaFighter0.classList.toggle("current-turn", state.pvp.phase === "choose" && currentIndex === 0);
-      dom.arenaFighter1.classList.toggle("current-turn", state.pvp.phase === "choose" && currentIndex === 1);
-
-      dom.arenaSetupPanel.classList.toggle("hidden", state.pvp.phase !== "setup");
-      dom.arenaChoicePanel.classList.toggle("hidden", state.pvp.phase !== "choose");
-
-      if (state.pvp.phase === "setup") {
-        dom.arenaPromptTitle.textContent = "Подготовь игроков к бою";
-        dom.arenaPromptText.textContent = "Выбери имена и открой подходящее снаряжение из магазина статистики.";
-      } else if (state.pvp.phase === "choose") {
-        dom.arenaPromptTitle.textContent = `${currentName}, выбери удар и защиту`;
-        dom.arenaPromptText.textContent = "Выбор будет скрыт до конца раунда. Если время кончится, ход выберется случайно.";
-        renderArenaChoiceButtons(dom.arenaAttackChoices, state.pvp.pendingChoice.attack, "attack");
-        renderArenaChoiceButtons(dom.arenaDefenseChoices, state.pvp.pendingChoice.defense, "defense");
-      } else {
-        dom.arenaPromptTitle.textContent = "Раунд завершён";
-        dom.arenaPromptText.textContent = "Сейчас видно, кто попал, а кто успел защититься.";
+      renderPvpScreen();
+      if (nextMode === "online" && hasGoogleAccount()) {
+        refreshArenaRooms({ silent: true });
       }
-
-      dom.arenaLogPanel.innerHTML = state.pvp.log.map((line) => `
-        <div class="arena-log-item">${escapeHtml(line)}</div>
-      `).join("");
+      if (nextMode === "tutorial") {
+        maybeSpeakArenaTutorial("setup");
+      }
     }
 
-    function startArenaMatch() {
+    function buildArenaSoloFighters(tutorialMode = false) {
+      normalizeProgressData();
+      state.pvp.computerLoadout = tutorialMode ? getArenaComputerLoadout(true) : getArenaComputerLoadout(false);
+
+      const fighterOne = createPvpFighter({
+        name: String(dom.arenaNameInput0.value || getDisplayPlayerName()).trim() || getDisplayPlayerName(),
+        emoji: HEROES[0].emoji,
+        weaponId: dom.arenaWeaponSelect0.value,
+        helmetId: dom.arenaHelmetSelect0.value,
+        armorId: dom.arenaArmorSelect0.value
+      });
+      const fighterTwo = createPvpFighter({
+        name: tutorialMode ? "Тренер-робот" : "Компьютер",
+        emoji: tutorialMode ? "🤖" : "👾",
+        ...state.pvp.computerLoadout
+      });
+
+      return [fighterOne, fighterTwo];
+    }
+
+    function startArenaLocalMatch() {
       normalizeProgressData();
       const fighterOne = createPvpFighter({
         name: String(dom.arenaNameInput0.value || "Игрок 1").trim() || "Игрок 1",
@@ -4147,15 +4461,396 @@
       state.pvp.pendingChoice = { attack: "", defense: "" };
       state.pvp.timerLeft = PVP_TURN_SECONDS;
       state.pvp.fighters = [fighterOne, fighterTwo];
-      state.pvp.log = [`Дуэль началась. ${fighterOne.name} выбирает первый скрытый ход.`];
+      state.pvp.log = [`Дуэль началась. У ${fighterOne.name} и ${fighterTwo.name} есть 30 секунд на каждый скрытый ход.`];
       renderPvpScreen();
       startArenaTurnTimer();
+    }
+
+    function startArenaSoloMatch(tutorialMode = false) {
+      const fighters = buildArenaSoloFighters(tutorialMode);
+      state.pvp.phase = "choose";
+      state.pvp.round = 1;
+      state.pvp.currentChooser = 0;
+      state.pvp.choices = [null, null];
+      state.pvp.pendingChoice = { attack: "", defense: "" };
+      state.pvp.timerLeft = PVP_TURN_SECONDS;
+      state.pvp.fighters = fighters;
+      state.pvp.log = [
+        tutorialMode
+          ? "Тренировка началась. Выбери, куда бьёшь и что защищаешь. Без брони тоже можно отбиться приседанием или уворотом."
+          : `${fighters[1].name} готов. Выбирай удар и защиту — на ход даётся 30 секунд.`
+      ];
+      renderPvpScreen();
+      startArenaTurnTimer();
+      if (tutorialMode) {
+        maybeSpeakArenaTutorial("choose");
+      }
+    }
+
+    function startArenaMatch() {
+      if (!state.pvp) {
+        return;
+      }
+
+      if (state.pvp.submode === "local") {
+        startArenaLocalMatch();
+        return;
+      }
+
+      if (state.pvp.submode === "ai" || state.pvp.submode === "tutorial") {
+        startArenaSoloMatch(state.pvp.submode === "tutorial");
+      }
+    }
+
+    function getArenaOnlineLoadout() {
+      normalizeProgressData();
+      return {
+        weaponId: progress.shop.equippedWeapon,
+        helmetId: progress.shop.equippedHelmet,
+        armorId: progress.shop.equippedArmor
+      };
+    }
+
+    function updateArenaOnlineRoom(room) {
+      if (!state.pvp || state.pvp.submode !== "online" || !room) {
+        return;
+      }
+
+      state.pvp.online.currentRoom = room;
+      state.pvp.fighters = Array.isArray(room.fighters) ? room.fighters.map((fighter) => ({ ...fighter })) : [];
+      state.pvp.round = room.round || 1;
+      state.pvp.phase = room.status === "active" && room.phase === "planning"
+        ? "choose"
+        : room.status === "waiting"
+          ? "setup"
+          : room.phase || room.status;
+      state.pvp.log = Array.isArray(room.lastRoundSummary) && room.lastRoundSummary.length
+        ? room.lastRoundSummary
+        : ["Комната обновлена."];
+
+      if (!(room.status === "active" && room.phase === "planning" && !room.myChoiceSubmitted)) {
+        state.pvp.pendingChoice = { attack: "", defense: "" };
+      }
+
+      if (room.status === "finished") {
+        stopArenaTurnTimer();
+        stopArenaOnlinePolling();
+        const finishKey = `${room.roomId}:${room.updatedAt}:${room.winnerPlayerId || "draw"}`;
+        if (state.pvp.online.finishedKey !== finishKey) {
+          state.pvp.online.finishedKey = finishKey;
+          const winnerIndex = room.winnerPlayerId
+            ? room.winnerPlayerId === room.hostPlayerId ? 0 : 1
+            : null;
+          finishPvpMatch(winnerIndex);
+        }
+        return;
+      }
+
+      if (room.status === "active" && room.phase === "planning") {
+        state.pvp.timerLeft = calculateArenaDeadlineSeconds(room.deadlineAt);
+        startArenaTurnTimer();
+      } else {
+        stopArenaTurnTimer();
+      }
+    }
+
+    async function refreshArenaRooms({ silent = false } = {}) {
+      if (!state.pvp || state.pvp.submode !== "online") {
+        return false;
+      }
+
+      if (!hasGoogleAccount()) {
+        state.pvp.online.error = "Для онлайн-дуэли нужно войти через Google.";
+        renderPvpScreen();
+        return false;
+      }
+
+      if (state.pvp.online.requestBusy) {
+        return false;
+      }
+
+      state.pvp.online.requestBusy = true;
+      state.pvp.online.loading = true;
+      renderPvpScreen();
+
+      let activeRoomId = "";
+      let success = false;
+      try {
+        const response = await cloudRequest("listRooms", {
+          playerId: getCloudPlayerId()
+        });
+
+        if (!response || !response.ok) {
+          throw new Error((response && response.error) || "Не удалось получить список комнат.");
+        }
+
+        state.pvp.online.rooms = Array.isArray(response.openRooms) ? response.openRooms : [];
+        state.pvp.online.myRooms = Array.isArray(response.myRooms) ? response.myRooms : [];
+        state.pvp.online.error = "";
+        state.pvp.online.lastLoadedAt = new Date().toISOString();
+
+        if (!state.pvp.online.currentRoom) {
+          const activeRoom = state.pvp.online.myRooms.find((room) => room.status === "waiting" || room.status === "active");
+          if (activeRoom) {
+            activeRoomId = activeRoom.roomId;
+          }
+        }
+
+        success = true;
+      } catch (error) {
+        state.pvp.online.error = error.message;
+        if (!silent) {
+          window.alert(`Не получилось обновить список комнат.\n\n${error.message}`);
+        }
+        renderPvpScreen();
+      } finally {
+        state.pvp.online.loading = false;
+        state.pvp.online.requestBusy = false;
+        renderPvpScreen();
+      }
+
+      if (activeRoomId) {
+        await fetchArenaRoomState(activeRoomId, { silent: true });
+      }
+      return success;
+    }
+
+    async function createArenaRoom() {
+      if (!state.pvp || state.pvp.submode !== "online") {
+        return;
+      }
+
+      if (!hasGoogleAccount()) {
+        window.alert("Для онлайн-дуэли сначала войди через Google.");
+        return;
+      }
+
+      if (state.pvp.online.requestBusy) {
+        return;
+      }
+
+      state.pvp.online.requestBusy = true;
+      state.pvp.online.loading = true;
+      renderPvpScreen();
+
+      try {
+        const response = await cloudRequest("createRoom", {
+          playerId: getCloudPlayerId(),
+          playerName: getDisplayPlayerName(),
+          loadoutJson: JSON.stringify(getArenaOnlineLoadout())
+        });
+
+        if (!response || !response.ok || !response.room) {
+          throw new Error((response && response.error) || "Не удалось создать комнату.");
+        }
+
+        state.pvp.online.error = "";
+        updateArenaOnlineRoom(response.room);
+        startArenaOnlinePolling();
+        renderPvpScreen();
+      } catch (error) {
+        state.pvp.online.error = error.message;
+        window.alert(`Не получилось создать комнату.\n\n${error.message}`);
+      } finally {
+        state.pvp.online.loading = false;
+        state.pvp.online.requestBusy = false;
+        renderPvpScreen();
+      }
+    }
+
+    async function joinArenaRoom(roomId) {
+      if (!state.pvp || state.pvp.submode !== "online" || !roomId) {
+        return;
+      }
+
+      if (!hasGoogleAccount()) {
+        window.alert("Для входа в онлайн-комнату сначала войди через Google.");
+        return;
+      }
+
+      if (state.pvp.online.requestBusy) {
+        return;
+      }
+
+      state.pvp.online.requestBusy = true;
+      state.pvp.online.loading = true;
+      renderPvpScreen();
+
+      try {
+        const response = await cloudRequest("joinRoom", {
+          roomId,
+          playerId: getCloudPlayerId(),
+          playerName: getDisplayPlayerName(),
+          loadoutJson: JSON.stringify(getArenaOnlineLoadout())
+        });
+
+        if (!response || !response.ok || !response.room) {
+          throw new Error((response && response.error) || "Не удалось войти в комнату.");
+        }
+
+        state.pvp.online.error = "";
+        updateArenaOnlineRoom(response.room);
+        startArenaOnlinePolling();
+        renderPvpScreen();
+      } catch (error) {
+        state.pvp.online.error = error.message;
+        window.alert(`Не получилось войти в комнату.\n\n${error.message}`);
+      } finally {
+        state.pvp.online.loading = false;
+        state.pvp.online.requestBusy = false;
+        renderPvpScreen();
+      }
+    }
+
+    async function fetchArenaRoomState(roomId = state.pvp?.online?.currentRoom?.roomId, { silent = false } = {}) {
+      if (!state.pvp || state.pvp.submode !== "online" || !roomId || !hasGoogleAccount()) {
+        return false;
+      }
+
+      if (state.pvp.online.requestBusy) {
+        return false;
+      }
+
+      state.pvp.online.requestBusy = true;
+      try {
+        const response = await cloudRequest("getRoomState", {
+          roomId,
+          playerId: getCloudPlayerId()
+        });
+
+        if (!response || !response.ok || !response.room) {
+          throw new Error((response && response.error) || "Не удалось получить состояние комнаты.");
+        }
+
+        state.pvp.online.error = "";
+        updateArenaOnlineRoom(response.room);
+        renderPvpScreen();
+        return true;
+      } catch (error) {
+        state.pvp.online.error = error.message;
+        if (!silent) {
+          window.alert(`Не получилось обновить бой.\n\n${error.message}`);
+        }
+        renderPvpScreen();
+        return false;
+      } finally {
+        state.pvp.online.requestBusy = false;
+      }
+    }
+
+    async function cancelArenaRoom() {
+      if (!state.pvp || state.pvp.submode !== "online" || !state.pvp.online.currentRoom) {
+        return;
+      }
+
+      const roomId = state.pvp.online.currentRoom.roomId;
+      if (!roomId || state.pvp.online.requestBusy) {
+        return;
+      }
+
+      state.pvp.online.requestBusy = true;
+      try {
+        const response = await cloudRequest("cancelRoom", {
+          roomId,
+          playerId: getCloudPlayerId()
+        });
+
+        if (!response || !response.ok || !response.room) {
+          throw new Error((response && response.error) || "Не удалось закрыть комнату.");
+        }
+
+        stopArenaTurnTimer();
+        stopArenaOnlinePolling();
+        if (response.room.status === "cancelled") {
+          state.pvp.online.currentRoom = null;
+          state.pvp.phase = "setup";
+          state.pvp.fighters = [];
+          state.pvp.log = ["Комната закрыта. Можно создать новую или вступить в другую."];
+        } else {
+          updateArenaOnlineRoom(response.room);
+        }
+        await refreshArenaRooms({ silent: true });
+      } catch (error) {
+        state.pvp.online.error = error.message;
+        window.alert(`Не получилось закрыть комнату.\n\n${error.message}`);
+      } finally {
+        state.pvp.online.requestBusy = false;
+        renderPvpScreen();
+      }
+    }
+
+    function startArenaOnlinePolling() {
+      stopArenaOnlinePolling();
+      if (!state.pvp || state.pvp.submode !== "online") {
+        return;
+      }
+
+      const room = state.pvp.online.currentRoom;
+      if (!room || (room.status !== "waiting" && room.status !== "active")) {
+        return;
+      }
+
+      state.pvp.online.pollTimerId = window.setInterval(() => {
+        if (!state.pvp || state.screen !== "pvp" || state.pvp.submode !== "online") {
+          stopArenaOnlinePolling();
+          return;
+        }
+
+        if (!state.pvp.online.requestBusy) {
+          fetchArenaRoomState(undefined, { silent: true });
+        }
+      }, 2500);
+    }
+
+    function buildArenaComputerChoice() {
+      const likelyAttack = state.pvp.pendingChoice.attack || randomItem(PVP_ZONES).id;
+      const randomDefense = randomItem(PVP_ZONES).id;
+      return {
+        attack: randomItem(PVP_ZONES).id,
+        defense: Math.random() > 0.55 ? likelyAttack : randomDefense
+      };
     }
 
     function chooseRandomArenaMove() {
       state.pvp.pendingChoice.attack = state.pvp.pendingChoice.attack || randomItem(PVP_ZONES).id;
       state.pvp.pendingChoice.defense = state.pvp.pendingChoice.defense || randomItem(PVP_ZONES).id;
       renderPvpScreen();
+    }
+
+    async function submitArenaOnlineChoice() {
+      if (!state.pvp || state.pvp.submode !== "online" || !state.pvp.online.currentRoom) {
+        return;
+      }
+
+      if (state.pvp.online.requestBusy) {
+        return;
+      }
+
+      state.pvp.online.requestBusy = true;
+
+      try {
+        const response = await cloudRequest("submitRoomTurn", {
+          roomId: state.pvp.online.currentRoom.roomId,
+          playerId: getCloudPlayerId(),
+          attack: state.pvp.pendingChoice.attack,
+          defense: state.pvp.pendingChoice.defense
+        });
+
+        if (!response || !response.ok || !response.room) {
+          throw new Error((response && response.error) || "Не удалось отправить ход.");
+        }
+
+        state.pvp.pendingChoice = { attack: "", defense: "" };
+        updateArenaOnlineRoom(response.room);
+        startArenaOnlinePolling();
+        renderPvpScreen();
+      } catch (error) {
+        state.pvp.online.error = error.message;
+        window.alert(`Не получилось отправить ход.\n\n${error.message}`);
+        startArenaTurnTimer();
+      } finally {
+        state.pvp.online.requestBusy = false;
+      }
     }
 
     function commitArenaChoice(fromTimer = false) {
@@ -4172,12 +4867,24 @@
         }
       }
 
+      if (state.pvp.submode === "online") {
+        stopArenaTurnTimer();
+        submitArenaOnlineChoice();
+        return;
+      }
+
       stopArenaTurnTimer();
       const chooserIndex = state.pvp.currentChooser;
       state.pvp.choices[chooserIndex] = {
         attack: state.pvp.pendingChoice.attack,
         defense: state.pvp.pendingChoice.defense
       };
+
+      if (state.pvp.submode === "ai" || state.pvp.submode === "tutorial") {
+        state.pvp.choices[1] = buildArenaComputerChoice();
+        resolveArenaRound();
+        return;
+      }
 
       if (chooserIndex === 0) {
         state.pvp.currentChooser = 1;
@@ -4237,14 +4944,14 @@
 
       state.pvp.phase = "resolve";
       state.pvp.log = [
-        `${fighters[0].name}: удар в ${choiceOne.attack === "head" ? "голову" : "корпус"}, защита ${choiceOne.defense === "head" ? "головы" : "корпуса"}.`,
-        `${fighters[1].name}: удар в ${choiceTwo.attack === "head" ? "голову" : "корпус"}, защита ${choiceTwo.defense === "head" ? "головы" : "корпуса"}.`,
+        `${fighters[0].name}: удар в ${describeArenaZone(choiceOne.attack)}, защита ${describeArenaZone(choiceOne.defense)}.`,
+        `${fighters[1].name}: удар в ${describeArenaZone(choiceTwo.attack)}, защита ${describeArenaZone(choiceTwo.defense)}.`,
         hitToTwo.damage > 0
           ? `${fighters[0].name} попал по ${fighters[1].name} и нанёс ${hitToTwo.damage} урона.`
-          : `${fighters[1].name} защитился от удара ${fighters[0].name}.`,
+          : describeArenaBlockAction(fighters[1], choiceOne.attack),
         hitToOne.damage > 0
           ? `${fighters[1].name} попал по ${fighters[0].name} и нанёс ${hitToOne.damage} урона.`
-          : `${fighters[0].name} защитился от удара ${fighters[1].name}.`
+          : describeArenaBlockAction(fighters[0], choiceTwo.attack)
       ];
       if (healedOne > 0) {
         state.pvp.log.push(`${fighters[0].name} восстановил ${healedOne} HP, потому что не пропустил удар.`);
@@ -4269,6 +4976,9 @@
       }
 
       renderPvpScreen();
+      if (state.pvp.submode === "tutorial") {
+        maybeSpeakArenaTutorial("resolve");
+      }
 
       const finished = fighters.some((fighter) => fighter.hp <= 0);
       state.pendingTimer = window.setTimeout(() => {
@@ -4286,10 +4996,240 @@
         state.pvp.choices = [null, null];
         state.pvp.pendingChoice = { attack: "", defense: "" };
         state.pvp.timerLeft = PVP_TURN_SECONDS;
-        state.pvp.log = [`Раунд ${state.pvp.round}. ${fighters[0].name} снова выбирает скрытый ход.`];
+        state.pvp.log = [state.pvp.submode === "local"
+          ? `Раунд ${state.pvp.round}. ${fighters[0].name} снова выбирает скрытый ход.`
+          : `Раунд ${state.pvp.round}. Снова выбери удар и защиту за 30 секунд.`];
         renderPvpScreen();
         startArenaTurnTimer();
+        if (state.pvp.submode === "tutorial") {
+          maybeSpeakArenaTutorial("choose");
+        }
       }, 1700);
+    }
+
+    function renderArenaRoomsList() {
+      if (!state.pvp || state.pvp.submode !== "online") {
+        dom.arenaRoomsList.innerHTML = "";
+        return;
+      }
+
+      if (!hasGoogleAccount()) {
+        dom.arenaRoomsList.innerHTML = "<p class=\"leaderboard-empty\">Сначала войди через Google, и тогда здесь появятся доступные комнаты.</p>";
+        return;
+      }
+
+      const currentRoom = state.pvp.online.currentRoom;
+      const cards = [];
+
+      if (currentRoom) {
+        cards.push(`
+          <div class="leaderboard-item is-me">
+            <div class="leaderboard-rank">★</div>
+            <div class="leaderboard-player">
+              <div class="leaderboard-meta">
+                <div class="leaderboard-name">Моя комната ${escapeHtml(currentRoom.roomId)}</div>
+                <div class="leaderboard-sub">${escapeHtml(currentRoom.status === "waiting" ? "Ждём соперника" : currentRoom.status === "active" ? `Раунд ${currentRoom.round}` : "Бой завершён")}</div>
+              </div>
+            </div>
+            <div class="leaderboard-score">
+              <strong>${escapeHtml(currentRoom.hostPlayerName || getDisplayPlayerName())}</strong>
+              <span>${escapeHtml(currentRoom.guestPlayerName || "соперник ищется")}</span>
+            </div>
+          </div>
+        `);
+      }
+
+      state.pvp.online.rooms.forEach((room, index) => {
+        const isCurrent = currentRoom && currentRoom.roomId === room.roomId;
+        if (isCurrent) {
+          return;
+        }
+
+        cards.push(`
+          <div class="leaderboard-item">
+            <div class="leaderboard-rank">${index + 1}</div>
+            <div class="leaderboard-player">
+              <div class="leaderboard-meta">
+                <div class="leaderboard-name">${escapeHtml(room.hostPlayerName || "Игрок")}</div>
+                <div class="leaderboard-sub">Комната ${escapeHtml(room.roomId)} · ждёт соперника</div>
+              </div>
+            </div>
+            <div class="leaderboard-score">
+              <button class="accent-btn" data-room-action="join" data-room-id="${escapeHtml(room.roomId)}" type="button">Вступить</button>
+            </div>
+          </div>
+        `);
+      });
+
+      if (!cards.length) {
+        dom.arenaRoomsList.innerHTML = "<p class=\"leaderboard-empty\">Свободных бойцов сейчас нет. Можно создать комнату или выбрать дуэль с компьютером.</p>";
+      } else {
+        dom.arenaRoomsList.innerHTML = cards.join("");
+      }
+
+      dom.arenaRoomsList.querySelectorAll("button[data-room-action=\"join\"]").forEach((button) => {
+        button.addEventListener("click", () => joinArenaRoom(button.dataset.roomId));
+      });
+    }
+
+    function renderPvpScreen() {
+      if (!state.pvp) {
+        return;
+      }
+
+      const submode = state.pvp.submode || "local";
+      const isOnline = submode === "online";
+      const onlineRoom = isOnline ? state.pvp.online.currentRoom : null;
+      const fighters = state.pvp.fighters.length
+        ? state.pvp.fighters
+        : [createArenaPreviewFighter(0), createArenaPreviewFighter(1)];
+      const currentIndex = state.pvp.currentChooser;
+      const currentName = fighters[currentIndex] ? fighters[currentIndex].name : "Игрок";
+      const controlledIndex = getArenaControlledIndex();
+      const showSetupPanel = !isOnline && state.pvp.phase === "setup";
+      const showChoicePanel = isOnline
+        ? Boolean(onlineRoom && onlineRoom.status === "active" && onlineRoom.phase === "planning" && !onlineRoom.myChoiceSubmitted)
+        : state.pvp.phase === "choose";
+
+      dom.arenaModeLabel.textContent = `Арена · ${getArenaSubmodeLabel(submode)}`;
+      dom.arenaLocalModeBtn.classList.toggle("mode-active", submode === "local");
+      dom.arenaAiModeBtn.classList.toggle("mode-active", submode === "ai");
+      dom.arenaTutorialModeBtn.classList.toggle("mode-active", submode === "tutorial");
+      dom.arenaOnlineModeBtn.classList.toggle("mode-active", submode === "online");
+
+      dom.arenaRoundLabel.textContent = `Раунд ${onlineRoom ? (onlineRoom.round || 1) : state.pvp.round}`;
+      dom.arenaCoinsLabel.textContent = progress.coins;
+      dom.arenaConfirmBtn.textContent = isOnline ? "Ход сделан" : "Подтвердить ход";
+      dom.arenaRandomBtn.textContent = isOnline ? "Случайный ход сейчас" : "Случайный ход";
+
+      if (isOnline) {
+        dom.arenaTimerLabel.textContent = onlineRoom && onlineRoom.status === "active" && onlineRoom.phase === "planning"
+          ? calculateArenaDeadlineSeconds(onlineRoom.deadlineAt)
+          : "—";
+        dom.arenaTurnLabel.textContent = !onlineRoom
+          ? "Поиск боя"
+          : onlineRoom.status === "waiting"
+            ? "Ждём соперника"
+            : onlineRoom.status === "finished"
+              ? "Бой окончен"
+              : onlineRoom.myChoiceSubmitted
+                ? "Ход отправлен"
+                : "Твой ход";
+      } else {
+        dom.arenaTimerLabel.textContent = state.pvp.phase === "choose" ? state.pvp.timerLeft : "—";
+        dom.arenaTurnLabel.textContent = state.pvp.phase === "setup"
+          ? "Подготовка"
+          : state.pvp.phase === "choose"
+            ? currentName
+            : "Разбор хода";
+      }
+
+      if (showSetupPanel) {
+        renderArenaSetupOptions();
+      }
+
+      [0, 1].forEach((index) => {
+        const fighter = fighters[index] || createArenaPreviewFighter(index);
+        const hp = fighter.hp ?? 100;
+        const maxHp = fighter.maxHp ?? 100;
+        const hpPercent = (hp / maxHp) * 100;
+
+        dom[`arenaName${index}`].textContent = fighter.name;
+        dom[`arenaLoadout${index}`].textContent = getPlayerWeaponSummary(fighter.weaponId, fighter.helmetId, fighter.armorId);
+        dom[`arenaHpText${index}`].textContent = `${hp} / ${maxHp}`;
+        dom[`arenaHpFill${index}`].style.width = `${hpPercent}%`;
+      });
+
+      dom.arenaFighter0.classList.toggle("current-turn", !isOnline && state.pvp.phase === "choose" && currentIndex === 0);
+      dom.arenaFighter1.classList.toggle("current-turn", !isOnline && state.pvp.phase === "choose" && currentIndex === 1);
+      if (isOnline) {
+        dom.arenaFighter0.classList.toggle("current-turn", Boolean(onlineRoom && controlledIndex === 0 && onlineRoom.status === "active" && onlineRoom.phase === "planning" && !onlineRoom.myChoiceSubmitted));
+        dom.arenaFighter1.classList.toggle("current-turn", Boolean(onlineRoom && controlledIndex === 1 && onlineRoom.status === "active" && onlineRoom.phase === "planning" && !onlineRoom.myChoiceSubmitted));
+      }
+
+      dom.arenaSetupPanel.classList.toggle("hidden", !showSetupPanel);
+      dom.arenaChoicePanel.classList.toggle("hidden", !showChoicePanel);
+      dom.arenaOnlinePanel.classList.toggle("hidden", !isOnline);
+
+      if (isOnline) {
+        const canCreateRoom = hasGoogleAccount() && !(onlineRoom && (onlineRoom.status === "waiting" || onlineRoom.status === "active"));
+        dom.arenaCreateRoomBtn.disabled = !canCreateRoom || state.pvp.online.loading;
+        dom.arenaRefreshRoomsBtn.disabled = !hasGoogleAccount() || state.pvp.online.loading;
+        dom.arenaCancelRoomBtn.classList.toggle("hidden", !(onlineRoom && (onlineRoom.status === "waiting" || onlineRoom.status === "active")));
+
+        dom.arenaOnlineStatus.textContent = state.pvp.online.error
+          ? `Ошибка: ${state.pvp.online.error}`
+          : !hasGoogleAccount()
+            ? "Войди через Google, чтобы создавать онлайн-дуэли и подключаться к ним."
+            : onlineRoom
+              ? onlineRoom.status === "waiting"
+                ? `Комната ${onlineRoom.roomId} создана. Ждём второго игрока.`
+                : onlineRoom.status === "active"
+                  ? onlineRoom.myChoiceSubmitted
+                    ? "Ход отправлен. Ждём соперника или окончания таймера."
+                    : "Выбери атаку и защиту. Ход отправится по кнопке или сам после таймера."
+                  : "Онлайн-бой завершён."
+              : state.pvp.online.loading
+                ? "Обновляю список игроков..."
+                : "Выбери свободного соперника или создай свою комнату.";
+
+        renderArenaRoomsList();
+      }
+
+      if (showChoicePanel) {
+        renderArenaChoiceButtons(dom.arenaAttackChoices, state.pvp.pendingChoice.attack, "attack");
+        renderArenaChoiceButtons(dom.arenaDefenseChoices, state.pvp.pendingChoice.defense, "defense");
+      }
+
+      if (state.pvp.phase === "setup" && !isOnline) {
+        if (submode === "tutorial") {
+          dom.arenaPromptTitle.textContent = "Тренировочный дуэль";
+          dom.arenaPromptText.textContent = "Сейчас будет бой с голосовыми подсказками. Даже без шлема и брони можно отбиться приседанием или уворотом.";
+        } else if (submode === "ai") {
+          dom.arenaPromptTitle.textContent = "Бой против компьютера";
+          dom.arenaPromptText.textContent = "Выбери своё имя и снаряжение. Компьютер сам подберёт соперника и даст 30 секунд на ход.";
+        } else {
+          dom.arenaPromptTitle.textContent = "Подготовь игроков к бою";
+          dom.arenaPromptText.textContent = "Выбери имена и снаряжение. Игроки будут делать ходы по очереди, а на каждый выбор даётся 30 секунд.";
+        }
+      } else if (isOnline) {
+        if (!onlineRoom) {
+          dom.arenaPromptTitle.textContent = "Онлайн-лобби";
+          dom.arenaPromptText.textContent = hasGoogleAccount()
+            ? "Здесь видны игроки, готовые вступить в бой. Можно создать комнату и ждать второго игрока."
+            : "Для онлайн-боя сначала войди через Google.";
+        } else if (onlineRoom.status === "waiting") {
+          dom.arenaPromptTitle.textContent = "Комната создана";
+          dom.arenaPromptText.textContent = "Когда второй игрок подключится, начнётся раунд и у обоих будет по 30 секунд на выбор.";
+        } else if (onlineRoom.status === "active" && onlineRoom.phase === "planning") {
+          dom.arenaPromptTitle.textContent = onlineRoom.myChoiceSubmitted
+            ? "Ход отправлен"
+            : "Выбери удар и защиту";
+          dom.arenaPromptText.textContent = onlineRoom.myChoiceSubmitted
+            ? "Твой ход уже записан. Ждём решения соперника или окончания таймера."
+            : "Можно ударить в голову или корпус, а защищать тоже нужно голову или корпус. Если времени не хватит, игра отправит случайный ход.";
+        } else {
+          dom.arenaPromptTitle.textContent = "Бой завершён";
+          dom.arenaPromptText.textContent = "Результат дуэли уже известен.";
+        }
+      } else if (state.pvp.phase === "choose") {
+        dom.arenaPromptTitle.textContent = submode === "local"
+          ? `${currentName}, выбери удар и защиту`
+          : `${fighters[0].name}, выбери удар и защиту`;
+        dom.arenaPromptText.textContent = submode === "local"
+          ? "Выбор будет скрыт до конца раунда. Можно нажать «Подтвердить ход» или дождаться таймера."
+          : "Сначала выбери, куда бьёшь, потом что защищаешь. Если времени не хватит, игра сделает случайный ход.";
+        if (submode === "tutorial") {
+          maybeSpeakArenaTutorial("choose");
+        }
+      } else {
+        dom.arenaPromptTitle.textContent = "Раунд завершён";
+        dom.arenaPromptText.textContent = "Сейчас видно, кто попал, а кто успел защититься или увернуться.";
+      }
+
+      dom.arenaLogPanel.innerHTML = state.pvp.log.map((line) => `
+        <div class="arena-log-item">${escapeHtml(line)}</div>
+      `).join("");
     }
 
     function renderFeedback(node, text, wasCorrect) {
@@ -4562,31 +5502,66 @@
     function finishPvpMatch(winnerIndex) {
       clearPendingTimer();
       stopArenaTurnTimer();
+      stopArenaOnlinePolling();
       const fighters = state.pvp.fighters;
       const winner = winnerIndex === null ? null : fighters[winnerIndex];
+      const submode = state.pvp.submode || "local";
+      const controlledIndex = getArenaControlledIndex();
+      const countedBattle = submode !== "tutorial";
+      const iWon = controlledIndex !== null && winnerIndex === controlledIndex;
+      const iLost = controlledIndex !== null && winnerIndex !== null && winnerIndex !== controlledIndex;
 
-      progress.pvp.battles += 1;
-      if (winner) {
+      if (countedBattle) {
+        progress.pvp.battles += 1;
+      }
+      if (submode === "tutorial") {
+        progress.pvp.tutorialDone = true;
+      }
+      if (iWon) {
         progress.pvp.wins += 1;
+      }
+      if (iLost) {
+        progress.pvp.losses += 1;
       }
 
       state.result = {
         success: true,
-        emoji: winner ? "🥇" : "🤝",
-        title: winner ? `${winner.name} победил!` : "Ничья на арене!",
-        text: winner
-          ? `${winner.name} оказался быстрее и точнее в защите и атаке.`
-          : "Оба игрока продержались одинаково долго. Можно устроить реванш!",
-        nextLabel: "Новая дуэль",
+        emoji: submode === "tutorial" ? "🎓" : winner ? "🥇" : "🤝",
+        title: submode === "tutorial"
+          ? "Тренировка закончилась!"
+          : submode === "online"
+            ? winner
+              ? iWon
+                ? "Ты победил в онлайне!"
+                : `${winner.name} победил!`
+              : "Онлайн-дуэль завершилась ничьей!"
+            : winner ? `${winner.name} победил!` : "Ничья на арене!",
+        text: submode === "tutorial"
+          ? "Теперь ты знаешь, как атаковать, защищаться, приседать и уворачиваться. Монеты знаний из учебных игр можно тратить на прокачку бойца."
+          : winner
+            ? submode === "ai"
+              ? iWon
+                ? "Ты переиграл компьютер и правильно чередовал атаку с защитой."
+                : "Компьютер оказался точнее в этом бою. Можно сразу взять реванш."
+              : submode === "online"
+                ? iWon
+                  ? "Ты оказался быстрее и точнее соперника в онлайне."
+                  : "Соперник оказался точнее в этом раунде, но реванш уже можно устроить."
+                : `${winner.name} оказался быстрее и точнее в защите и атаке.`
+            : "Оба игрока продержались одинаково долго. Можно устроить реванш!",
+        nextLabel: submode === "tutorial" ? "Сыграть настоящий бой" : "Новая дуэль",
         cards: [
           { label: fighters[0].name, value: `${fighters[0].hp} HP` },
           { label: fighters[1].name, value: `${fighters[1].hp} HP` },
           { label: "Раундов в бою", value: state.pvp.round },
-          { label: "Дуэлей", value: progress.pvp.battles }
+          { label: submode === "tutorial" ? "Режим" : "Дуэлей", value: submode === "tutorial" ? "Тренировка" : progress.pvp.battles }
         ]
       };
 
       saveProgress();
+      if (submode === "tutorial") {
+        maybeSpeakArenaTutorial("finish");
+      }
       renderResultScreen();
       setScreen("result");
     }
@@ -4700,6 +5675,7 @@
 
       clearPendingTimer();
       stopArenaTurnTimer();
+      stopArenaOnlinePolling();
       stopSpeech();
       progress = createDefaultProgress();
       normalizeProgressData();
@@ -4729,6 +5705,13 @@
       dom.raceMenuBtn.addEventListener("click", goToMenu);
       dom.arenaMenuBtn.addEventListener("click", goToMenu);
       dom.arenaStartBtn.addEventListener("click", startArenaMatch);
+      dom.arenaLocalModeBtn.addEventListener("click", () => setPvpSubmode("local"));
+      dom.arenaAiModeBtn.addEventListener("click", () => setPvpSubmode("ai"));
+      dom.arenaTutorialModeBtn.addEventListener("click", () => setPvpSubmode("tutorial"));
+      dom.arenaOnlineModeBtn.addEventListener("click", () => setPvpSubmode("online"));
+      dom.arenaCreateRoomBtn.addEventListener("click", createArenaRoom);
+      dom.arenaRefreshRoomsBtn.addEventListener("click", () => refreshArenaRooms());
+      dom.arenaCancelRoomBtn.addEventListener("click", cancelArenaRoom);
       dom.arenaConfirmBtn.addEventListener("click", () => commitArenaChoice(false));
       dom.arenaRandomBtn.addEventListener("click", () => {
         chooseRandomArenaMove();
