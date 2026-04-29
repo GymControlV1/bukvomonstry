@@ -1420,6 +1420,10 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .arena-choice-buttons.rps-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .arena-choice-btn {
       min-height: 72px;
       border-radius: 22px;
@@ -1449,6 +1453,110 @@
       color: var(--muted);
       line-height: 1.45;
       font-weight: 700;
+    }
+
+    .round-popup {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(17, 38, 69, 0.5);
+    }
+
+    .round-popup-card {
+      width: min(880px, 100%);
+      padding: 24px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 250, 255, 0.98) 100%);
+      box-shadow: 0 28px 80px rgba(20, 49, 86, 0.24);
+      display: grid;
+      gap: 18px;
+    }
+
+    .round-popup-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .round-popup-title {
+      font-size: clamp(26px, 4vw, 38px);
+      letter-spacing: -0.04em;
+    }
+
+    .round-popup-summary {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.5;
+      font-weight: 800;
+    }
+
+    .round-popup-scenes {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .round-scene {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 2px solid rgba(91, 141, 239, 0.12);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: 12px;
+    }
+
+    .round-scene-actors {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 1;
+    }
+
+    .round-scene-action {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .round-scene-action strong {
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .round-scene-meta {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .round-scene-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(232, 242, 255, 0.92);
+      color: #24568f;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .round-popup-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .mode-active {
@@ -1626,6 +1734,10 @@
         grid-template-columns: 1fr;
       }
 
+      .round-popup-scenes {
+        grid-template-columns: 1fr;
+      }
+
       .topbar {
         margin-bottom: 14px;
       }
@@ -1784,6 +1896,16 @@
               <div class="mode-chip-row">
                 <span class="chip warning">Локально на одном устройстве</span>
                 <span class="chip success">Магазин в статистике</span>
+              </div>
+            </button>
+
+            <button class="mode-card" data-mode="rps" data-game="rps">
+              <div class="mode-icon">🪨✂️📄</div>
+              <h3>Камень-Ножницы-Бумага</h3>
+              <p>Для тех, кто не любит драться: выбираем знак, прячем ход и смотрим дружеский итог раунда.</p>
+              <div class="mode-chip-row">
+                <span class="chip">До 3 побед</span>
+                <span class="chip success">Локально или с компьютером</span>
               </div>
             </button>
           </div>
@@ -1957,7 +2079,7 @@
                 <div id="arenaName0" class="arena-name">Игрок 1</div>
                 <div id="arenaLoadout0" class="arena-loadout">👊 Кулаки · 🪖 Без шлема · 🦺 Без доспеха</div>
                 <div class="hp-top">
-                  <span>Здоровье</span>
+                  <span id="arenaStatLabel0">Здоровье</span>
                   <span id="arenaHpText0">100 / 100</span>
                 </div>
                 <div class="hp-bar">
@@ -1970,7 +2092,7 @@
                 <div id="arenaName1" class="arena-name">Игрок 2</div>
                 <div id="arenaLoadout1" class="arena-loadout">👊 Кулаки · 🪖 Без шлема · 🦺 Без доспеха</div>
                 <div class="hp-top">
-                  <span>Здоровье</span>
+                  <span id="arenaStatLabel1">Здоровье</span>
                   <span id="arenaHpText1">100 / 100</span>
                 </div>
                 <div class="hp-bar">
@@ -2004,7 +2126,7 @@
                 </div>
               </div>
 
-              <div class="arena-input-grid">
+              <div id="arenaLoadoutGrid" class="arena-input-grid">
                 <div class="arena-field">
                   <label for="arenaWeaponSelect0">Оружие игрока 1</label>
                   <select id="arenaWeaponSelect0"></select>
@@ -2055,12 +2177,12 @@
 
             <div id="arenaChoicePanel" class="hidden">
               <div class="arena-choice-grid">
-                <div class="arena-choice-card">
-                  <h3>Куда наносим удар?</h3>
+                <div id="arenaAttackCard" class="arena-choice-card">
+                  <h3 id="arenaAttackTitle">Куда наносим удар?</h3>
                   <div id="arenaAttackChoices" class="arena-choice-buttons"></div>
                 </div>
-                <div class="arena-choice-card">
-                  <h3>Что защищаем?</h3>
+                <div id="arenaDefenseCard" class="arena-choice-card">
+                  <h3 id="arenaDefenseTitle">Что защищаем?</h3>
                   <div id="arenaDefenseChoices" class="arena-choice-buttons"></div>
                 </div>
               </div>
@@ -2072,6 +2194,22 @@
             </div>
 
             <div id="arenaLogPanel" class="arena-round-log"></div>
+          </div>
+        </div>
+
+        <div id="arenaRoundPopup" class="round-popup hidden" role="dialog" aria-modal="true" aria-labelledby="arenaRoundPopupTitle">
+          <div class="round-popup-card">
+            <div class="round-popup-head">
+              <div>
+                <h3 id="arenaRoundPopupTitle" class="round-popup-title">Итог раунда</h3>
+                <p id="arenaRoundPopupSummary" class="round-popup-summary"></p>
+              </div>
+            </div>
+            <div id="arenaRoundPopupScenes" class="round-popup-scenes"></div>
+            <div class="round-popup-actions">
+              <button id="arenaRoundPopupSpeakBtn" class="secondary-btn" type="button">🔊 Повторить итог</button>
+              <button id="arenaRoundPopupCloseBtn" class="primary-btn" type="button">Дальше</button>
+            </div>
           </div>
         </div>
       </section>
@@ -2236,13 +2374,19 @@
       { id: "head", title: "Голова", emoji: "🧠" },
       { id: "body", title: "Корпус", emoji: "🛡️" }
     ];
+    const RPS_SIGNS = [
+      { id: "rock", title: "Камень", emoji: "🪨" },
+      { id: "scissors", title: "Ножницы", emoji: "✂️" },
+      { id: "paper", title: "Бумага", emoji: "📄" }
+    ];
     const GOOD_MESSAGES = ["Отлично!", "Молодец!", "Супер!"];
     const SOFT_MESSAGES = ["Почти! Попробуй ещё", "Ничего, давай ещё раз!", "Спокойно, у тебя получится!"];
     const MODE_LABELS = {
       letters: "Буквы",
       numbers: "Цифры",
       mixed: "Смешанный",
-      arena: "Арена"
+      arena: "Арена",
+      rps: "Камень-Ножницы-Бумага"
     };
     const ACHIEVEMENTS = [
       { id: "firstMonster", emoji: "⚔️", title: "Первый монстр побеждён", description: "Выиграй первый бой." },
@@ -2336,6 +2480,8 @@
       arenaName1: document.getElementById("arenaName1"),
       arenaLoadout0: document.getElementById("arenaLoadout0"),
       arenaLoadout1: document.getElementById("arenaLoadout1"),
+      arenaStatLabel0: document.getElementById("arenaStatLabel0"),
+      arenaStatLabel1: document.getElementById("arenaStatLabel1"),
       arenaHpText0: document.getElementById("arenaHpText0"),
       arenaHpText1: document.getElementById("arenaHpText1"),
       arenaHpFill0: document.getElementById("arenaHpFill0"),
@@ -2349,6 +2495,7 @@
       arenaTutorialModeBtn: document.getElementById("arenaTutorialModeBtn"),
       arenaOnlineModeBtn: document.getElementById("arenaOnlineModeBtn"),
       arenaSetupPanel: document.getElementById("arenaSetupPanel"),
+      arenaLoadoutGrid: document.getElementById("arenaLoadoutGrid"),
       arenaOnlinePanel: document.getElementById("arenaOnlinePanel"),
       arenaRoomsList: document.getElementById("arenaRoomsList"),
       arenaOnlineStatus: document.getElementById("arenaOnlineStatus"),
@@ -2367,10 +2514,20 @@
       arenaArmorSelect1: document.getElementById("arenaArmorSelect1"),
       arenaStartBtn: document.getElementById("arenaStartBtn"),
       arenaMenuBtn: document.getElementById("arenaMenuBtn"),
+      arenaAttackCard: document.getElementById("arenaAttackCard"),
+      arenaDefenseCard: document.getElementById("arenaDefenseCard"),
+      arenaAttackTitle: document.getElementById("arenaAttackTitle"),
+      arenaDefenseTitle: document.getElementById("arenaDefenseTitle"),
       arenaAttackChoices: document.getElementById("arenaAttackChoices"),
       arenaDefenseChoices: document.getElementById("arenaDefenseChoices"),
       arenaConfirmBtn: document.getElementById("arenaConfirmBtn"),
       arenaRandomBtn: document.getElementById("arenaRandomBtn"),
+      arenaRoundPopup: document.getElementById("arenaRoundPopup"),
+      arenaRoundPopupTitle: document.getElementById("arenaRoundPopupTitle"),
+      arenaRoundPopupSummary: document.getElementById("arenaRoundPopupSummary"),
+      arenaRoundPopupScenes: document.getElementById("arenaRoundPopupScenes"),
+      arenaRoundPopupSpeakBtn: document.getElementById("arenaRoundPopupSpeakBtn"),
+      arenaRoundPopupCloseBtn: document.getElementById("arenaRoundPopupCloseBtn"),
       resultEmoji: document.getElementById("result-emoji"),
       resultTitle: document.getElementById("result-title"),
       resultText: document.getElementById("result-text"),
@@ -2772,8 +2929,23 @@
       };
     }
 
-    function createPvpMatch() {
+    function createRpsPlayer({ name, emoji }) {
       return {
+        name,
+        emoji,
+        score: 0,
+        maxScore: 3,
+        lastSign: ""
+      };
+    }
+
+    function getRpsSignById(signId) {
+      return RPS_SIGNS.find((sign) => sign.id === signId) || RPS_SIGNS[0];
+    }
+
+    function createPvpMatch(kind = "arena") {
+      return {
+        kind,
         submode: progress.pvp.tutorialDone ? "local" : "tutorial",
         phase: "setup",
         round: 1,
@@ -2792,6 +2964,8 @@
           armorId: ""
         },
         tutorialHintKey: "",
+        roundPopup: null,
+        afterPopupAction: null,
         online: {
           rooms: [],
           myRooms: [],
@@ -2801,7 +2975,8 @@
           requestBusy: false,
           lastLoadedAt: "",
           error: "",
-          finishedKey: ""
+          finishedKey: "",
+          lastReviewKey: ""
         },
         log: ["Сначала выберите режим арены и подготовьте бойцов."]
       };
@@ -3597,7 +3772,7 @@
       state.mode = mode;
       state.pvp = null;
 
-      if (gameType === "pvp") {
+      if (gameType === "pvp" || gameType === "rps") {
         state.level = 1;
         state.totalTasks = 0;
         state.taskIndex = 0;
@@ -3614,10 +3789,14 @@
         state.lastUnlocked = [];
         state.result = null;
         state.lastSpokenQuestionId = null;
-        state.pvp = createPvpMatch();
+        state.pvp = createPvpMatch(gameType === "rps" ? "rps" : "arena");
+        if (gameType === "rps") {
+          state.pvp.submode = "local";
+          state.feedback = "Дружеская игра ждёт.";
+        }
         setScreen("pvp");
         renderPvpScreen();
-        if (state.pvp.submode === "tutorial") {
+        if (state.pvp.kind === "arena" && state.pvp.submode === "tutorial") {
           maybeSpeakArenaTutorial("setup");
         }
         return;
@@ -4069,6 +4248,24 @@
       }[mode] || "Арена";
     }
 
+    function isDuelRps() {
+      return Boolean(state.pvp && state.pvp.kind === "rps");
+    }
+
+    function getDuelModeLabel() {
+      return isDuelRps() ? "Камень-Ножницы-Бумага" : "Арена";
+    }
+
+    function getAttackInstrumentText(weaponId) {
+      return {
+        hands: "рукой",
+        stick: "палкой",
+        woodSword: "деревянным мечом",
+        copperSword: "медным мечом",
+        ironSword: "железным мечом"
+      }[weaponId] || "своим оружием";
+    }
+
     function getArenaSelectedLoadout(index) {
       return {
         weaponId: index === 0
@@ -4136,7 +4333,111 @@
         : `${defender.name} закрыл корпус предметом «${item.name}».`;
     }
 
+    function buildArenaActionSentence(attacker, defender, attackZone, result) {
+      const zoneText = attackZone === "head" ? "в голову" : "в корпус";
+      if (result.damage > 0) {
+        return `${attacker.name} нанёс ${getAttackInstrumentText(attacker.weaponId)} удар ${defender.name} ${zoneText} и попал.`;
+      }
+
+      return `${attacker.name} нанёс ${getAttackInstrumentText(attacker.weaponId)} удар ${defender.name} ${zoneText}, но ${defender.name} защитил ${attackZone === "head" ? "голову" : "корпус"}.`;
+    }
+
+    function buildArenaRoundPopupData(fighters, choiceOne, choiceTwo, hitToTwo, hitToOne) {
+      const summary = `${buildArenaActionSentence(fighters[0], fighters[1], choiceOne.attack, hitToTwo)} ${buildArenaActionSentence(fighters[1], fighters[0], choiceTwo.attack, hitToOne)}`;
+      return {
+        title: `Итог раунда ${state.pvp.round}`,
+        summary,
+        speechText: summary,
+        scenes: [
+          {
+            attackerEmoji: fighters[0].emoji,
+            defenderEmoji: fighters[1].emoji,
+            headline: `${fighters[0].name} атакует`,
+            moveLabel: `${getAttackInstrumentText(fighters[0].weaponId)} · ${describeArenaZone(choiceOne.attack)}`,
+            resultLabel: hitToTwo.damage > 0 ? `💥 Попадание на ${hitToTwo.damage}` : "🛡️ Защита",
+            meta: hitToTwo.damage > 0
+              ? `${fighters[1].name} не успел закрыть нужную часть тела.`
+              : `${fighters[1].name} прикрылся или увернулся.`
+          },
+          {
+            attackerEmoji: fighters[1].emoji,
+            defenderEmoji: fighters[0].emoji,
+            headline: `${fighters[1].name} отвечает`,
+            moveLabel: `${getAttackInstrumentText(fighters[1].weaponId)} · ${describeArenaZone(choiceTwo.attack)}`,
+            resultLabel: hitToOne.damage > 0 ? `💥 Попадание на ${hitToOne.damage}` : "🛡️ Защита",
+            meta: hitToOne.damage > 0
+              ? `${fighters[0].name} пропустил ответный удар.`
+              : `${fighters[0].name} прикрылся или увернулся.`
+          }
+        ]
+      };
+    }
+
+    function buildArenaRoundPopupFromOnlineData(room) {
+      if (!room || !room.lastRoundData || !Array.isArray(room.fighters) || room.fighters.length < 2) {
+        return null;
+      }
+
+      const data = room.lastRoundData;
+      const popupFighters = room.fighters.map((fighter) => ({
+        ...fighter,
+        name: fighter.name,
+        emoji: fighter.emoji
+      }));
+      return buildArenaRoundPopupData(
+        popupFighters,
+        data.hostChoice || { attack: "body", defense: "body" },
+        data.guestChoice || { attack: "body", defense: "body" },
+        { damage: Number(data.hitToGuestDamage || 0) },
+        { damage: Number(data.hitToHostDamage || 0) }
+      );
+    }
+
+    function openArenaRoundPopup(popup, onDone) {
+      if (!state.pvp) {
+        return;
+      }
+
+      clearPendingTimer();
+      state.pvp.roundPopup = popup;
+      state.pvp.afterPopupAction = typeof onDone === "function" ? onDone : null;
+      renderPvpScreen();
+      if (popup.speechText) {
+        speakText(popup.speechText);
+      }
+      state.pendingTimer = window.setTimeout(() => {
+        closeArenaRoundPopup();
+      }, 4200);
+    }
+
+    function closeArenaRoundPopup() {
+      if (!state.pvp || !state.pvp.roundPopup) {
+        return;
+      }
+
+      clearPendingTimer();
+      const callback = state.pvp.afterPopupAction;
+      state.pvp.roundPopup = null;
+      state.pvp.afterPopupAction = null;
+      renderPvpScreen();
+      if (typeof callback === "function") {
+        callback();
+      }
+    }
+
     function createArenaPreviewFighter(index) {
+      if (isDuelRps()) {
+        const vsComputer = state.pvp?.submode === "ai";
+        return createRpsPlayer({
+          name: index === 0
+            ? (String(dom.arenaNameInput0.value || getDisplayPlayerName()).trim() || getDisplayPlayerName())
+            : vsComputer
+              ? "Компьютер"
+              : (String(dom.arenaNameInput1.value || "Игрок 2").trim() || "Игрок 2"),
+          emoji: index === 0 ? HEROES[0].emoji : (vsComputer ? "🐻" : HEROES[1].emoji)
+        });
+      }
+
       const submode = state.pvp?.submode || "local";
       if (submode === "online") {
         if (index === 0) {
@@ -4201,8 +4502,9 @@
     }
 
     function renderArenaSetupOptions() {
+      const duelKind = state.pvp?.kind || "arena";
       const submode = state.pvp?.submode || "local";
-      const soloMode = submode === "ai" || submode === "tutorial";
+      const soloMode = submode === "ai" || (duelKind === "arena" && submode === "tutorial");
       const ownedWeapons = getOwnedItems(WEAPONS, progress.shop.ownedWeapons);
       const ownedHelmets = getOwnedItems(HELMETS, progress.shop.ownedHelmets);
       const ownedArmors = getOwnedItems(ARMORS, progress.shop.ownedArmors);
@@ -4223,7 +4525,7 @@
         armor1: progress.shop.ownedArmors.includes(dom.arenaArmorSelect1.value) ? dom.arenaArmorSelect1.value : progress.shop.equippedArmor
       };
 
-      if (soloMode && !state.pvp.computerLoadout.weaponId) {
+      if (duelKind === "arena" && soloMode && !state.pvp.computerLoadout.weaponId) {
         state.pvp.computerLoadout = getArenaComputerLoadout(submode === "tutorial");
       }
 
@@ -4233,9 +4535,9 @@
 
       if (soloMode) {
         dom.arenaNameInput1.value = submode === "tutorial" ? "Тренер-робот" : "Компьютер";
-        fillArenaSelect(dom.arenaWeaponSelect1, ownedWeapons, state.pvp.computerLoadout.weaponId);
-        fillArenaSelect(dom.arenaHelmetSelect1, ownedHelmets, state.pvp.computerLoadout.helmetId);
-        fillArenaSelect(dom.arenaArmorSelect1, ownedArmors, state.pvp.computerLoadout.armorId);
+        fillArenaSelect(dom.arenaWeaponSelect1, ownedWeapons, state.pvp.computerLoadout.weaponId || selected.weapon1);
+        fillArenaSelect(dom.arenaHelmetSelect1, ownedHelmets, state.pvp.computerLoadout.helmetId || selected.helmet1);
+        fillArenaSelect(dom.arenaArmorSelect1, ownedArmors, state.pvp.computerLoadout.armorId || selected.armor1);
       } else {
         fillArenaSelect(dom.arenaWeaponSelect1, ownedWeapons, selected.weapon1);
         fillArenaSelect(dom.arenaHelmetSelect1, ownedHelmets, selected.helmet1);
@@ -4254,8 +4556,9 @@
           : "Начать дуэль";
     }
 
-    function renderArenaChoiceButtons(container, selectedValue, type) {
-      container.innerHTML = PVP_ZONES.map((zone) => `
+    function renderArenaChoiceButtons(container, selectedValue, type, items = PVP_ZONES) {
+      container.classList.toggle("rps-grid", items.length === 3);
+      container.innerHTML = items.map((zone) => `
         <button
           class="arena-choice-btn ${selectedValue === zone.id ? "selected" : ""}"
           data-choice-type="${type}"
@@ -4270,6 +4573,34 @@
           renderPvpScreen();
         });
       });
+    }
+
+    function renderArenaRoundPopup() {
+      const popup = state.pvp && state.pvp.roundPopup;
+      dom.arenaRoundPopup.classList.toggle("hidden", !popup);
+      if (!popup) {
+        dom.arenaRoundPopupScenes.innerHTML = "";
+        dom.arenaRoundPopupSummary.textContent = "";
+        return;
+      }
+
+      dom.arenaRoundPopupTitle.textContent = popup.title;
+      dom.arenaRoundPopupSummary.textContent = popup.summary;
+      dom.arenaRoundPopupScenes.innerHTML = (popup.scenes || []).map((scene) => `
+        <div class="round-scene">
+          <div class="round-scene-actors">
+            <span>${escapeHtml(scene.attackerEmoji || "🙂")}</span>
+            <span>${escapeHtml(scene.centerEmoji || "➡️")}</span>
+            <span>${escapeHtml(scene.defenderEmoji || "🙂")}</span>
+          </div>
+          <div class="round-scene-action">
+            <strong>${escapeHtml(scene.headline || "")}</strong>
+            <div class="round-scene-badge">${escapeHtml(scene.moveLabel || "")}</div>
+          </div>
+          <div class="round-scene-meta">${escapeHtml(scene.resultLabel || "")}</div>
+          <div class="round-scene-meta">${escapeHtml(scene.meta || "")}</div>
+        </div>
+      `).join("");
     }
 
     function stopArenaOnlinePolling() {
@@ -4386,19 +4717,27 @@
       stopArenaOnlinePolling();
       stopSpeech();
 
-      const nextMode = ["local", "ai", "tutorial", "online"].includes(mode) ? mode : "local";
-      const nextMatch = createPvpMatch();
+      const duelKind = state.pvp.kind || "arena";
+      const allowedModes = duelKind === "rps"
+        ? ["local", "ai"]
+        : ["local", "ai", "tutorial", "online"];
+      const nextMode = allowedModes.includes(mode) ? mode : "local";
+      const nextMatch = createPvpMatch(duelKind);
       nextMatch.submode = nextMode;
       nextMatch.log = [
-        nextMode === "online"
-          ? "В онлайне можно создать комнату и ждать второго игрока или подключиться к готовому бою."
-          : nextMode === "tutorial"
-            ? "Тренировочный дуэльный бой подскажет, как атаковать, защищаться и тратить монеты на прокачку."
-            : nextMode === "ai"
-              ? "Если онлайн-соперников нет, можно сразиться с компьютером."
-              : "Локальный бой идёт на одном устройстве: сначала выбирает игрок 1, потом игрок 2."
+        duelKind === "rps"
+          ? nextMode === "ai"
+            ? "Дружеская игра с компьютером. Выбирай знак и жди красивый итог раунда."
+            : "Локальная партия: сначала знак выбирает игрок 1, потом игрок 2."
+          : nextMode === "online"
+            ? "В онлайне можно создать комнату и ждать второго игрока или подключиться к готовому бою."
+            : nextMode === "tutorial"
+              ? "Тренировочный дуэльный бой подскажет, как атаковать, защищаться и тратить монеты на прокачку."
+              : nextMode === "ai"
+                ? "Если онлайн-соперников нет, можно сразиться с компьютером."
+                : "Локальный бой идёт на одном устройстве: сначала выбирает игрок 1, потом игрок 2."
       ];
-      nextMatch.computerLoadout = getArenaComputerLoadout(nextMode === "tutorial");
+      nextMatch.computerLoadout = duelKind === "arena" ? getArenaComputerLoadout(nextMode === "tutorial") : nextMatch.computerLoadout;
       state.pvp = nextMatch;
 
       if (!dom.arenaNameInput0.value.trim() || dom.arenaNameInput0.value === "Игрок 1") {
@@ -4409,10 +4748,10 @@
       }
 
       renderPvpScreen();
-      if (nextMode === "online" && hasGoogleAccount()) {
+      if (duelKind === "arena" && nextMode === "online" && hasGoogleAccount()) {
         refreshArenaRooms({ silent: true });
       }
-      if (nextMode === "tutorial") {
+      if (duelKind === "arena" && nextMode === "tutorial") {
         maybeSpeakArenaTutorial("setup");
       }
     }
@@ -4435,6 +4774,19 @@
       });
 
       return [fighterOne, fighterTwo];
+    }
+
+    function buildRpsFighters(vsComputer = false) {
+      return [
+        createRpsPlayer({
+          name: String(dom.arenaNameInput0.value || getDisplayPlayerName()).trim() || getDisplayPlayerName(),
+          emoji: HEROES[0].emoji
+        }),
+        createRpsPlayer({
+          name: vsComputer ? "Компьютер" : (String(dom.arenaNameInput1.value || "Игрок 2").trim() || "Игрок 2"),
+          emoji: vsComputer ? "🐻" : HEROES[1].emoji
+        })
+      ];
     }
 
     function startArenaLocalMatch() {
@@ -4466,6 +4818,22 @@
       startArenaTurnTimer();
     }
 
+    function startRpsMatch(vsComputer = false) {
+      const fighters = buildRpsFighters(vsComputer);
+      state.pvp.phase = "choose";
+      state.pvp.round = 1;
+      state.pvp.currentChooser = 0;
+      state.pvp.choices = [null, null];
+      state.pvp.pendingChoice = { attack: "", defense: "" };
+      state.pvp.timerLeft = PVP_TURN_SECONDS;
+      state.pvp.fighters = fighters;
+      state.pvp.log = [vsComputer
+        ? `${fighters[1].name} готов к дружеской игре. Выбери знак, и через 30 секунд ход закроется сам.`
+        : `Партия началась. ${fighters[0].name} и ${fighters[1].name} по очереди выбирают знак.`];
+      renderPvpScreen();
+      startArenaTurnTimer();
+    }
+
     function startArenaSoloMatch(tutorialMode = false) {
       const fighters = buildArenaSoloFighters(tutorialMode);
       state.pvp.phase = "choose";
@@ -4489,6 +4857,11 @@
 
     function startArenaMatch() {
       if (!state.pvp) {
+        return;
+      }
+
+      if (state.pvp.kind === "rps") {
+        startRpsMatch(state.pvp.submode === "ai");
         return;
       }
 
@@ -4532,15 +4905,36 @@
         state.pvp.pendingChoice = { attack: "", defense: "" };
       }
 
+      const reviewKey = room.lastRoundData && room.lastRoundData.reviewKey ? room.lastRoundData.reviewKey : "";
+      const winnerIndex = room.winnerPlayerId
+        ? room.winnerPlayerId === room.hostPlayerId ? 0 : 1
+        : null;
+      const completeAfterPopup = () => {
+        if (room.status === "finished") {
+          finishPvpMatch(winnerIndex);
+          return;
+        }
+        renderPvpScreen();
+        if (room.status === "active" && room.phase === "planning" && !room.myChoiceSubmitted) {
+          startArenaTurnTimer();
+        }
+      };
+
+      if (reviewKey && state.pvp.online.lastReviewKey !== reviewKey) {
+        state.pvp.online.lastReviewKey = reviewKey;
+        const popup = buildArenaRoundPopupFromOnlineData(room);
+        if (popup) {
+          openArenaRoundPopup(popup, completeAfterPopup);
+          return;
+        }
+      }
+
       if (room.status === "finished") {
         stopArenaTurnTimer();
         stopArenaOnlinePolling();
         const finishKey = `${room.roomId}:${room.updatedAt}:${room.winnerPlayerId || "draw"}`;
         if (state.pvp.online.finishedKey !== finishKey) {
           state.pvp.online.finishedKey = finishKey;
-          const winnerIndex = room.winnerPlayerId
-            ? room.winnerPlayerId === room.hostPlayerId ? 0 : 1
-            : null;
           finishPvpMatch(winnerIndex);
         }
         return;
@@ -4811,9 +5205,19 @@
       };
     }
 
+    function buildRpsComputerChoice() {
+      return {
+        sign: randomItem(RPS_SIGNS).id
+      };
+    }
+
     function chooseRandomArenaMove() {
-      state.pvp.pendingChoice.attack = state.pvp.pendingChoice.attack || randomItem(PVP_ZONES).id;
-      state.pvp.pendingChoice.defense = state.pvp.pendingChoice.defense || randomItem(PVP_ZONES).id;
+      if (isDuelRps()) {
+        state.pvp.pendingChoice.attack = state.pvp.pendingChoice.attack || randomItem(RPS_SIGNS).id;
+      } else {
+        state.pvp.pendingChoice.attack = state.pvp.pendingChoice.attack || randomItem(PVP_ZONES).id;
+        state.pvp.pendingChoice.defense = state.pvp.pendingChoice.defense || randomItem(PVP_ZONES).id;
+      }
       renderPvpScreen();
     }
 
@@ -4858,7 +5262,16 @@
         return;
       }
 
-      if (!state.pvp.pendingChoice.attack || !state.pvp.pendingChoice.defense) {
+      if (isDuelRps()) {
+        if (!state.pvp.pendingChoice.attack) {
+          if (fromTimer) {
+            chooseRandomArenaMove();
+          } else {
+            window.alert("Нужно выбрать знак.");
+            return;
+          }
+        }
+      } else if (!state.pvp.pendingChoice.attack || !state.pvp.pendingChoice.defense) {
         if (fromTimer) {
           chooseRandomArenaMove();
         } else {
@@ -4875,10 +5288,35 @@
 
       stopArenaTurnTimer();
       const chooserIndex = state.pvp.currentChooser;
-      state.pvp.choices[chooserIndex] = {
-        attack: state.pvp.pendingChoice.attack,
-        defense: state.pvp.pendingChoice.defense
-      };
+      state.pvp.choices[chooserIndex] = isDuelRps()
+        ? {
+          sign: state.pvp.pendingChoice.attack
+        }
+        : {
+          attack: state.pvp.pendingChoice.attack,
+          defense: state.pvp.pendingChoice.defense
+        };
+
+      if (isDuelRps()) {
+        if (state.pvp.submode === "ai") {
+          state.pvp.choices[1] = buildRpsComputerChoice();
+          resolveRpsRound();
+          return;
+        }
+
+        if (chooserIndex === 0) {
+          state.pvp.currentChooser = 1;
+          state.pvp.pendingChoice = { attack: "", defense: "" };
+          state.pvp.timerLeft = PVP_TURN_SECONDS;
+          state.pvp.log = [`Знак ${state.pvp.fighters[0].name} скрыт. Теперь выбирает ${state.pvp.fighters[1].name}.`];
+          renderPvpScreen();
+          startArenaTurnTimer();
+          return;
+        }
+
+        resolveRpsRound();
+        return;
+      }
 
       if (state.pvp.submode === "ai" || state.pvp.submode === "tutorial") {
         state.pvp.choices[1] = buildArenaComputerChoice();
@@ -4897,6 +5335,106 @@
       }
 
       resolveArenaRound();
+    }
+
+    function resolveRpsWinner(signOne, signTwo) {
+      if (signOne === signTwo) {
+        return null;
+      }
+
+      if (
+        (signOne === "rock" && signTwo === "scissors")
+        || (signOne === "scissors" && signTwo === "paper")
+        || (signOne === "paper" && signTwo === "rock")
+      ) {
+        return 0;
+      }
+
+      return 1;
+    }
+
+    function buildRpsRoundPopupData(playerOne, playerTwo, signOne, signTwo, winnerIndex) {
+      const firstSign = getRpsSignById(signOne);
+      const secondSign = getRpsSignById(signTwo);
+      const summary = winnerIndex === null
+        ? `${playerOne.name} выбрал ${firstSign.title}, а ${playerTwo.name} выбрал ${secondSign.title}. Получилась ничья.`
+        : winnerIndex === 0
+          ? `${playerOne.name} выбрал ${firstSign.title}, а ${playerTwo.name} выбрал ${secondSign.title}. ${playerOne.name} выиграл раунд.`
+          : `${playerOne.name} выбрал ${firstSign.title}, а ${playerTwo.name} выбрал ${secondSign.title}. ${playerTwo.name} выиграл раунд.`;
+
+      return {
+        title: `Итог раунда ${state.pvp.round}`,
+        summary,
+        speechText: summary,
+        scenes: [
+          {
+            attackerEmoji: playerOne.emoji,
+            defenderEmoji: firstSign.emoji,
+            centerEmoji: "✨",
+            headline: playerOne.name,
+            moveLabel: `${firstSign.emoji} ${firstSign.title}`,
+            resultLabel: winnerIndex === 0 ? "🌟 Победа в раунде" : winnerIndex === null ? "🤝 Ничья" : "🙂 Ждём следующий раунд",
+            meta: "Знак первого игрока."
+          },
+          {
+            attackerEmoji: playerTwo.emoji,
+            defenderEmoji: secondSign.emoji,
+            centerEmoji: "✨",
+            headline: playerTwo.name,
+            moveLabel: `${secondSign.emoji} ${secondSign.title}`,
+            resultLabel: winnerIndex === 1 ? "🌟 Победа в раунде" : winnerIndex === null ? "🤝 Ничья" : "🙂 Ждём следующий раунд",
+            meta: "Знак второго игрока."
+          }
+        ]
+      };
+    }
+
+    function resolveRpsRound() {
+      const fighters = state.pvp.fighters;
+      const choiceOne = state.pvp.choices[0];
+      const choiceTwo = state.pvp.choices[1];
+      const winnerIndex = resolveRpsWinner(choiceOne.sign, choiceTwo.sign);
+
+      fighters[0].lastSign = choiceOne.sign;
+      fighters[1].lastSign = choiceTwo.sign;
+      progress.pvp.rounds += 1;
+      if (winnerIndex !== null) {
+        fighters[winnerIndex].score += 1;
+      }
+
+      state.pvp.phase = "resolve";
+      state.pvp.log = [
+        `${fighters[0].name} выбрал ${getRpsSignById(choiceOne.sign).title}.`,
+        `${fighters[1].name} выбрал ${getRpsSignById(choiceTwo.sign).title}.`,
+        winnerIndex === null
+          ? "Получилась ничья."
+          : `${fighters[winnerIndex].name} выиграл этот раунд.`
+      ];
+      renderPvpScreen();
+
+      const popup = buildRpsRoundPopupData(fighters[0], fighters[1], choiceOne.sign, choiceTwo.sign, winnerIndex);
+      const finished = fighters.some((fighter) => fighter.score >= fighter.maxScore);
+      openArenaRoundPopup(popup, () => {
+        if (finished) {
+          const finalWinnerIndex = fighters[0].score === fighters[1].score
+            ? null
+            : fighters[0].score > fighters[1].score ? 0 : 1;
+          finishPvpMatch(finalWinnerIndex);
+          return;
+        }
+
+        state.pvp.round += 1;
+        state.pvp.phase = "choose";
+        state.pvp.currentChooser = 0;
+        state.pvp.choices = [null, null];
+        state.pvp.pendingChoice = { attack: "", defense: "" };
+        state.pvp.timerLeft = PVP_TURN_SECONDS;
+        state.pvp.log = [state.pvp.submode === "local"
+          ? `Раунд ${state.pvp.round}. ${fighters[0].name} снова выбирает знак.`
+          : `Раунд ${state.pvp.round}. Выбери новый знак.`];
+        renderPvpScreen();
+        startArenaTurnTimer();
+      });
     }
 
     function calculateArenaDamage(attacker, defender, attackZone, defenseZone) {
@@ -4981,7 +5519,8 @@
       }
 
       const finished = fighters.some((fighter) => fighter.hp <= 0);
-      state.pendingTimer = window.setTimeout(() => {
+      const popup = buildArenaRoundPopupData(fighters, choiceOne, choiceTwo, hitToTwo, hitToOne);
+      openArenaRoundPopup(popup, () => {
         if (finished) {
           const winnerIndex = fighters[0].hp === fighters[1].hp
             ? null
@@ -5004,7 +5543,7 @@
         if (state.pvp.submode === "tutorial") {
           maybeSpeakArenaTutorial("choose");
         }
-      }, 1700);
+      });
     }
 
     function renderArenaRoomsList() {
@@ -5077,8 +5616,10 @@
         return;
       }
 
+      const duelKind = state.pvp.kind || "arena";
       const submode = state.pvp.submode || "local";
       const isOnline = submode === "online";
+      const isRps = duelKind === "rps";
       const onlineRoom = isOnline ? state.pvp.online.currentRoom : null;
       const fighters = state.pvp.fighters.length
         ? state.pvp.fighters
@@ -5091,11 +5632,13 @@
         ? Boolean(onlineRoom && onlineRoom.status === "active" && onlineRoom.phase === "planning" && !onlineRoom.myChoiceSubmitted)
         : state.pvp.phase === "choose";
 
-      dom.arenaModeLabel.textContent = `Арена · ${getArenaSubmodeLabel(submode)}`;
+      dom.arenaModeLabel.textContent = `${getDuelModeLabel()} · ${getArenaSubmodeLabel(submode)}`;
       dom.arenaLocalModeBtn.classList.toggle("mode-active", submode === "local");
       dom.arenaAiModeBtn.classList.toggle("mode-active", submode === "ai");
       dom.arenaTutorialModeBtn.classList.toggle("mode-active", submode === "tutorial");
       dom.arenaOnlineModeBtn.classList.toggle("mode-active", submode === "online");
+      dom.arenaTutorialModeBtn.classList.toggle("hidden", isRps);
+      dom.arenaOnlineModeBtn.classList.toggle("hidden", isRps);
 
       dom.arenaRoundLabel.textContent = `Раунд ${onlineRoom ? (onlineRoom.round || 1) : state.pvp.round}`;
       dom.arenaCoinsLabel.textContent = progress.coins;
@@ -5130,12 +5673,15 @@
 
       [0, 1].forEach((index) => {
         const fighter = fighters[index] || createArenaPreviewFighter(index);
-        const hp = fighter.hp ?? 100;
-        const maxHp = fighter.maxHp ?? 100;
-        const hpPercent = (hp / maxHp) * 100;
+        const hp = isRps ? (fighter.score ?? 0) : (fighter.hp ?? 100);
+        const maxHp = isRps ? (fighter.maxScore ?? 3) : (fighter.maxHp ?? 100);
+        const hpPercent = maxHp ? (hp / maxHp) * 100 : 0;
 
         dom[`arenaName${index}`].textContent = fighter.name;
-        dom[`arenaLoadout${index}`].textContent = getPlayerWeaponSummary(fighter.weaponId, fighter.helmetId, fighter.armorId);
+        dom[`arenaLoadout${index}`].textContent = isRps
+          ? (fighter.lastSign ? `Последний знак: ${getRpsSignById(fighter.lastSign).emoji} ${getRpsSignById(fighter.lastSign).title}` : "Знак пока скрыт")
+          : getPlayerWeaponSummary(fighter.weaponId, fighter.helmetId, fighter.armorId);
+        dom[`arenaStatLabel${index}`].textContent = isRps ? "Счёт" : "Здоровье";
         dom[`arenaHpText${index}`].textContent = `${hp} / ${maxHp}`;
         dom[`arenaHpFill${index}`].style.width = `${hpPercent}%`;
       });
@@ -5150,6 +5696,7 @@
       dom.arenaSetupPanel.classList.toggle("hidden", !showSetupPanel);
       dom.arenaChoicePanel.classList.toggle("hidden", !showChoicePanel);
       dom.arenaOnlinePanel.classList.toggle("hidden", !isOnline);
+      dom.arenaLoadoutGrid.classList.toggle("hidden", isRps);
 
       if (isOnline) {
         const canCreateRoom = hasGoogleAccount() && !(onlineRoom && (onlineRoom.status === "waiting" || onlineRoom.status === "active"));
@@ -5177,12 +5724,29 @@
       }
 
       if (showChoicePanel) {
-        renderArenaChoiceButtons(dom.arenaAttackChoices, state.pvp.pendingChoice.attack, "attack");
-        renderArenaChoiceButtons(dom.arenaDefenseChoices, state.pvp.pendingChoice.defense, "defense");
+        if (isRps) {
+          dom.arenaAttackTitle.textContent = "Выбери знак";
+          dom.arenaDefenseCard.classList.add("hidden");
+          renderArenaChoiceButtons(dom.arenaAttackChoices, state.pvp.pendingChoice.attack, "attack", RPS_SIGNS);
+        } else {
+          dom.arenaAttackTitle.textContent = "Куда наносим удар?";
+          dom.arenaDefenseTitle.textContent = "Что защищаем?";
+          dom.arenaDefenseCard.classList.remove("hidden");
+          renderArenaChoiceButtons(dom.arenaAttackChoices, state.pvp.pendingChoice.attack, "attack");
+          renderArenaChoiceButtons(dom.arenaDefenseChoices, state.pvp.pendingChoice.defense, "defense");
+        }
+      } else {
+        dom.arenaDefenseCard.classList.toggle("hidden", isRps);
       }
 
       if (state.pvp.phase === "setup" && !isOnline) {
-        if (submode === "tutorial") {
+        if (isRps) {
+          dom.arenaPromptTitle.textContent = "Камень-Ножницы-Бумага";
+          dom.arenaPromptText.textContent = submode === "ai"
+            ? "Спокойная дружеская игра против компьютера. На каждый скрытый выбор тоже даётся 30 секунд. Побеждает тот, кто первым возьмёт 3 раунда."
+            : "Оба игрока по очереди выбирают знак, потом игра показывает красивый итог раунда и проговаривает его. Побеждает тот, кто первым возьмёт 3 раунда.";
+          dom.arenaStartBtn.textContent = submode === "ai" ? "Играть с компьютером" : "Начать партию";
+        } else if (submode === "tutorial") {
           dom.arenaPromptTitle.textContent = "Тренировочный дуэль";
           dom.arenaPromptText.textContent = "Сейчас будет бой с голосовыми подсказками. Даже без шлема и брони можно отбиться приседанием или уворотом.";
         } else if (submode === "ai") {
@@ -5213,23 +5777,33 @@
           dom.arenaPromptText.textContent = "Результат дуэли уже известен.";
         }
       } else if (state.pvp.phase === "choose") {
-        dom.arenaPromptTitle.textContent = submode === "local"
-          ? `${currentName}, выбери удар и защиту`
-          : `${fighters[0].name}, выбери удар и защиту`;
-        dom.arenaPromptText.textContent = submode === "local"
-          ? "Выбор будет скрыт до конца раунда. Можно нажать «Подтвердить ход» или дождаться таймера."
-          : "Сначала выбери, куда бьёшь, потом что защищаешь. Если времени не хватит, игра сделает случайный ход.";
-        if (submode === "tutorial") {
+        if (isRps) {
+          dom.arenaPromptTitle.textContent = submode === "local"
+            ? `${currentName}, выбери знак`
+            : `${fighters[0].name}, выбери знак`;
+          dom.arenaPromptText.textContent = "Выбор будет скрыт до конца раунда. Можно нажать «Подтвердить ход» или дождаться таймера.";
+        } else {
+          dom.arenaPromptTitle.textContent = submode === "local"
+            ? `${currentName}, выбери удар и защиту`
+            : `${fighters[0].name}, выбери удар и защиту`;
+          dom.arenaPromptText.textContent = submode === "local"
+            ? "Выбор будет скрыт до конца раунда. Можно нажать «Подтвердить ход» или дождаться таймера."
+            : "Сначала выбери, куда бьёшь, потом что защищаешь. Если времени не хватит, игра сделает случайный ход.";
+        }
+        if (!isRps && submode === "tutorial") {
           maybeSpeakArenaTutorial("choose");
         }
       } else {
         dom.arenaPromptTitle.textContent = "Раунд завершён";
-        dom.arenaPromptText.textContent = "Сейчас видно, кто попал, а кто успел защититься или увернуться.";
+        dom.arenaPromptText.textContent = isRps
+          ? "Сейчас видно, какой знак оказался сильнее."
+          : "Сейчас видно, кто попал, а кто успел защититься или увернуться.";
       }
 
       dom.arenaLogPanel.innerHTML = state.pvp.log.map((line) => `
         <div class="arena-log-item">${escapeHtml(line)}</div>
       `).join("");
+      renderArenaRoundPopup();
     }
 
     function renderFeedback(node, text, wasCorrect) {
@@ -5505,6 +6079,7 @@
       stopArenaOnlinePolling();
       const fighters = state.pvp.fighters;
       const winner = winnerIndex === null ? null : fighters[winnerIndex];
+      const duelKind = state.pvp.kind || "arena";
       const submode = state.pvp.submode || "local";
       const controlledIndex = getArenaControlledIndex();
       const countedBattle = submode !== "tutorial";
@@ -5526,8 +6101,12 @@
 
       state.result = {
         success: true,
-        emoji: submode === "tutorial" ? "🎓" : winner ? "🥇" : "🤝",
-        title: submode === "tutorial"
+        emoji: duelKind === "rps" ? (winner ? "🏆" : "🤝") : submode === "tutorial" ? "🎓" : winner ? "🥇" : "🤝",
+        title: duelKind === "rps"
+          ? winner
+            ? `${winner.name} выиграл партию!`
+            : "Дружеская ничья!"
+          : submode === "tutorial"
           ? "Тренировка закончилась!"
           : submode === "online"
             ? winner
@@ -5536,7 +6115,11 @@
                 : `${winner.name} победил!`
               : "Онлайн-дуэль завершилась ничьей!"
             : winner ? `${winner.name} победил!` : "Ничья на арене!",
-        text: submode === "tutorial"
+        text: duelKind === "rps"
+          ? winner
+            ? `${winner.name} оказался удачливее в игре «Камень-Ножницы-Бумага». Можно сразу сыграть ещё раз.`
+            : "Оба игрока набрали одинаковый счёт. Можно продолжить дружескую игру."
+          : submode === "tutorial"
           ? "Теперь ты знаешь, как атаковать, защищаться, приседать и уворачиваться. Монеты знаний из учебных игр можно тратить на прокачку бойца."
           : winner
             ? submode === "ai"
@@ -5549,12 +6132,14 @@
                   : "Соперник оказался точнее в этом раунде, но реванш уже можно устроить."
                 : `${winner.name} оказался быстрее и точнее в защите и атаке.`
             : "Оба игрока продержались одинаково долго. Можно устроить реванш!",
-        nextLabel: submode === "tutorial" ? "Сыграть настоящий бой" : "Новая дуэль",
+        nextLabel: duelKind === "rps"
+          ? "Новая партия"
+          : submode === "tutorial" ? "Сыграть настоящий бой" : "Новая дуэль",
         cards: [
-          { label: fighters[0].name, value: `${fighters[0].hp} HP` },
-          { label: fighters[1].name, value: `${fighters[1].hp} HP` },
-          { label: "Раундов в бою", value: state.pvp.round },
-          { label: submode === "tutorial" ? "Режим" : "Дуэлей", value: submode === "tutorial" ? "Тренировка" : progress.pvp.battles }
+          { label: fighters[0].name, value: duelKind === "rps" ? `${fighters[0].score} очка` : `${fighters[0].hp} HP` },
+          { label: fighters[1].name, value: duelKind === "rps" ? `${fighters[1].score} очка` : `${fighters[1].hp} HP` },
+          { label: duelKind === "rps" ? "Раундов в партии" : "Раундов в бою", value: state.pvp.round },
+          { label: submode === "tutorial" ? "Режим" : duelKind === "rps" ? "Игра" : "Дуэлей", value: submode === "tutorial" ? "Тренировка" : duelKind === "rps" ? "Камень-Ножницы-Бумага" : progress.pvp.battles }
         ]
       };
 
@@ -5574,10 +6159,10 @@
       dom.resultTitle.textContent = result.title;
       dom.resultText.textContent = result.text;
       dom.nextLevelBtn.textContent = result.nextLabel;
-      dom.retryBtn.textContent = state.gameType === "pvp"
+      dom.retryBtn.textContent = state.gameType === "pvp" || state.gameType === "rps"
         ? "Реванш"
         : result.success ? "Сыграть ещё раз" : "Попробовать ещё раз";
-      dom.nextLevelBtn.classList.toggle("hidden", !result.success && state.gameType !== "pvp");
+      dom.nextLevelBtn.classList.toggle("hidden", !result.success && state.gameType !== "pvp" && state.gameType !== "rps");
 
       const resultCards = result.cards || [
         { label: "Очки", value: player.score },
@@ -5716,6 +6301,12 @@
       dom.arenaRandomBtn.addEventListener("click", () => {
         chooseRandomArenaMove();
         commitArenaChoice(false);
+      });
+      dom.arenaRoundPopupCloseBtn.addEventListener("click", closeArenaRoundPopup);
+      dom.arenaRoundPopupSpeakBtn.addEventListener("click", () => {
+        if (state.pvp && state.pvp.roundPopup && state.pvp.roundPopup.speechText) {
+          speakText(state.pvp.roundPopup.speechText);
+        }
       });
       dom.resultMenuBtn.addEventListener("click", goToMenu);
       dom.statsMenuBtn.addEventListener("click", goToMenu);
