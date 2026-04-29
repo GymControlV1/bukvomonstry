@@ -1,0 +1,2913 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>БуквоМонстры: Побег из Алфавитного мира</title>
+  <style>
+    :root {
+      --sky-top: #7dd3fc;
+      --sky-bottom: #fef3c7;
+      --paper: rgba(255, 255, 255, 0.92);
+      --paper-strong: #ffffff;
+      --ink: #20324d;
+      --muted: #5d6e88;
+      --berry: #ff6b6b;
+      --berry-deep: #ef4444;
+      --sun: #ffb703;
+      --mint: #49dcb1;
+      --mint-deep: #1fb989;
+      --blue: #5b8def;
+      --violet: #8b7cf6;
+      --sand: #fff8e8;
+      --danger: #ff8fa3;
+      --success: #8cf0b5;
+      --shadow: 0 20px 40px rgba(58, 76, 105, 0.16);
+      --shadow-soft: 0 10px 24px rgba(58, 76, 105, 0.12);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.8), transparent 22%),
+        radial-gradient(circle at 85% 18%, rgba(255, 255, 255, 0.72), transparent 18%),
+        linear-gradient(180deg, var(--sky-top) 0%, #c4f0ff 28%, var(--sky-bottom) 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(8px);
+      opacity: 0.45;
+    }
+
+    body::before {
+      width: 260px;
+      height: 260px;
+      left: -70px;
+      bottom: 12%;
+      background: rgba(255, 183, 3, 0.35);
+    }
+
+    body::after {
+      width: 320px;
+      height: 320px;
+      right: -80px;
+      top: 10%;
+      background: rgba(139, 124, 246, 0.2);
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(1100px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 18px 0 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .title-wrap {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .logo-badge {
+      width: 74px;
+      height: 74px;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, #ffffff 0%, #ffecc5 100%);
+      box-shadow: var(--shadow);
+      border: 3px solid rgba(255, 255, 255, 0.88);
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+      max-width: 620px;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--paper);
+      backdrop-filter: blur(14px);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .stack-lg {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stack-md {
+      display: grid;
+      gap: 14px;
+    }
+
+    .intro-card {
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.95), transparent 36%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 248, 232, 0.98) 100%);
+    }
+
+    .intro-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -60px auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(91, 141, 239, 0.1);
+    }
+
+    .hero-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .hero-characters {
+      font-size: clamp(48px, 8vw, 78px);
+      letter-spacing: 0.08em;
+      text-shadow: 0 10px 18px rgba(91, 141, 239, 0.18);
+    }
+
+    .lead {
+      font-size: 18px;
+      line-height: 1.45;
+      margin-top: 12px;
+      max-width: 720px;
+      font-weight: 700;
+    }
+
+    .tip-card,
+    .mini-stat {
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .tip-card {
+      background: linear-gradient(145deg, #e4fff4 0%, #f4fff9 100%);
+      border: 2px solid rgba(73, 220, 177, 0.36);
+      color: #0f5a46;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .mini-stats-grid,
+    .menu-grid,
+    .stats-grid,
+    .achievement-grid,
+    .mode-grid,
+    .result-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .mini-stats-grid,
+    .stats-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .menu-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .mini-stat {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(244, 251, 255, 0.98) 100%);
+      border: 2px solid rgba(91, 141, 239, 0.16);
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .stat-label {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .feature-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 252, 241, 0.96) 100%);
+      border: 2px dashed rgba(255, 183, 3, 0.34);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .feature-card strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .cloud-card {
+      background: linear-gradient(145deg, rgba(231, 247, 255, 0.96) 0%, rgba(255, 252, 241, 0.98) 100%);
+      border: 2px solid rgba(91, 141, 239, 0.16);
+    }
+
+    .cloud-panel {
+      background: rgba(255, 255, 255, 0.82);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      border: 2px solid rgba(91, 141, 239, 0.12);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: 10px;
+    }
+
+    .cloud-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .code-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(32, 50, 77, 0.08);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 900;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      letter-spacing: 0.04em;
+    }
+
+    .cloud-status-good {
+      color: #0f7a59;
+    }
+
+    .cloud-status-warn {
+      color: #9b6300;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      appearance: none;
+      border: none;
+      border-radius: 999px;
+      padding: 16px 22px;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      min-height: 58px;
+      transition: transform 0.12s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      box-shadow: var(--shadow-soft);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.04);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      cursor: default;
+      opacity: 0.72;
+      transform: none;
+    }
+
+    .primary-btn {
+      color: white;
+      background: linear-gradient(135deg, #ff7a59 0%, #ff4d6d 100%);
+    }
+
+    .secondary-btn {
+      color: var(--ink);
+      background: linear-gradient(135deg, #ffffff 0%, #eaf6ff 100%);
+      border: 2px solid rgba(91, 141, 239, 0.18);
+    }
+
+    .accent-btn {
+      color: white;
+      background: linear-gradient(135deg, #36cfc9 0%, #168aad 100%);
+    }
+
+    .danger-btn {
+      color: white;
+      background: linear-gradient(135deg, #ff8fa3 0%, #ff4d6d 100%);
+    }
+
+    .ghost-btn {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.84);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .full-width {
+      width: 100%;
+    }
+
+    .section-title {
+      font-size: clamp(24px, 3vw, 34px);
+      margin-bottom: 8px;
+      letter-spacing: -0.04em;
+    }
+
+    .section-text {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .mode-card {
+      border: none;
+      text-align: left;
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(252, 247, 234, 0.98) 100%);
+      border: 2px solid rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
+      min-height: 190px;
+    }
+
+    .mode-card .mode-icon {
+      font-size: 42px;
+      margin-bottom: 14px;
+    }
+
+    .mode-card h3 {
+      font-size: 22px;
+      margin-bottom: 8px;
+      letter-spacing: -0.03em;
+    }
+
+    .mode-card p {
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .mode-chip-row,
+    .info-chip-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(91, 141, 239, 0.12);
+      color: #2650a6;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .chip.success {
+      background: rgba(73, 220, 177, 0.14);
+      color: #0f7a59;
+    }
+
+    .chip.warning {
+      background: rgba(255, 183, 3, 0.16);
+      color: #9b6300;
+    }
+
+    .status-card {
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.86), transparent 26%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 252, 255, 0.98) 100%);
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .status-tile {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      padding: 14px;
+      border: 2px solid rgba(91, 141, 239, 0.12);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .status-tile strong {
+      display: block;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .status-tile span {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .arena {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(120px, 0.5fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    .fighter {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 252, 255, 0.96) 100%);
+      border-radius: 26px;
+      padding: 20px;
+      min-height: 220px;
+      border: 2px solid rgba(91, 141, 239, 0.14);
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      position: relative;
+    }
+
+    .fighter.hero {
+      background: linear-gradient(180deg, rgba(255, 250, 238, 0.96) 0%, rgba(255, 255, 255, 0.98) 100%);
+    }
+
+    .fighter.monster {
+      background: linear-gradient(180deg, rgba(244, 247, 255, 0.98) 0%, rgba(255, 255, 255, 0.96) 100%);
+    }
+
+    .fighter-emoji {
+      font-size: clamp(64px, 8vw, 92px);
+      display: block;
+      line-height: 1;
+    }
+
+    .avatar-stage {
+      position: relative;
+      width: 128px;
+      height: 118px;
+      margin: 0 auto 8px;
+      display: grid;
+      place-items: center;
+    }
+
+    .damage-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .damage-mark {
+      position: absolute;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .damage-mark.visible {
+      opacity: 1;
+      transform: scale(1);
+      animation: sticker-pop 0.42s ease;
+    }
+
+    .damage-mark.bruise {
+      left: 24px;
+      top: 54px;
+      width: 20px;
+      height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 40%, rgba(152, 198, 255, 0.95), rgba(89, 112, 231, 0.92));
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.22);
+    }
+
+    .damage-mark.bandage {
+      right: 18px;
+      top: 34px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #fff7da 0%, #ffd992 100%);
+      color: #9d6d00;
+      font-size: 16px;
+      font-weight: 900;
+      transform: rotate(16deg) scale(0.6);
+    }
+
+    .damage-mark.stars {
+      left: 10px;
+      top: 12px;
+      font-size: 20px;
+      text-shadow: 0 4px 10px rgba(255, 183, 3, 0.28);
+    }
+
+    .damage-mark.patch {
+      right: 16px;
+      bottom: 12px;
+      font-size: 24px;
+    }
+
+    .fighter h3 {
+      font-size: 24px;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .fighter p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    .hp-top {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .hp-bar {
+      width: 100%;
+      height: 16px;
+      margin-top: 10px;
+      border-radius: 999px;
+      background: rgba(32, 50, 77, 0.08);
+      overflow: hidden;
+    }
+
+    .hp-fill {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #49dcb1 0%, #96f7bf 100%);
+      transition: width 0.28s ease;
+    }
+
+    .hp-fill.monster {
+      background: linear-gradient(90deg, #ff9f68 0%, #ff6b6b 100%);
+    }
+
+    .vs-bubble {
+      align-self: stretch;
+      display: grid;
+      gap: 12px;
+      align-content: center;
+      justify-items: center;
+    }
+
+    .vs-icon {
+      width: 92px;
+      height: 92px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #fff 0%, #ffe6c8 100%);
+      font-size: 32px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .speech {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.84);
+      border-radius: 22px;
+      padding: 14px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 800;
+      border: 2px dashed rgba(255, 183, 3, 0.26);
+    }
+
+    .question-card {
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.9), transparent 28%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 249, 236, 0.98) 100%);
+    }
+
+    .question-label {
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .question-title {
+      margin-top: 8px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    .question-help {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .visual-box {
+      margin-top: 18px;
+      min-height: 92px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 2px dashed rgba(91, 141, 239, 0.22);
+      border-radius: 22px;
+      padding: 18px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .target-badge {
+      display: inline-grid;
+      place-items: center;
+      min-width: 96px;
+      min-height: 96px;
+      padding: 14px;
+      border-radius: 28px;
+      font-size: 52px;
+      font-weight: 900;
+      background: linear-gradient(145deg, #ffffff 0%, #eef6ff 100%);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .count-visual {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: clamp(30px, 5vw, 44px);
+      line-height: 1;
+    }
+
+    .word-visual {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .word-emoji {
+      font-size: 54px;
+    }
+
+    .word-text {
+      font-size: clamp(28px, 4vw, 42px);
+      letter-spacing: -0.04em;
+    }
+
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .answer-btn {
+      min-height: 112px;
+      border-radius: 28px;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 900;
+      background: linear-gradient(180deg, #ffffff 0%, #eef7ff 100%);
+      color: var(--ink);
+      border: 2px solid rgba(91, 141, 239, 0.16);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .answer-btn.is-correct {
+      background: linear-gradient(180deg, #ecfff2 0%, #c8ffd9 100%);
+      border-color: rgba(31, 185, 137, 0.38);
+      color: #106449;
+      animation: pulse-correct 0.55s ease;
+    }
+
+    .answer-btn.is-wrong {
+      background: linear-gradient(180deg, #fff3f6 0%, #ffd3dc 100%);
+      border-color: rgba(239, 68, 68, 0.32);
+      color: #a72f43;
+      animation: wobble-error 0.45s ease;
+    }
+
+    .feedback-banner {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 20px;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .feedback-banner.good {
+      color: #0f7a59;
+      background: linear-gradient(135deg, #e8fff1 0%, #f6fff8 100%);
+    }
+
+    .feedback-banner.soft {
+      color: #995f00;
+      background: linear-gradient(135deg, #fff7dd 0%, #fffdf3 100%);
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .race-card {
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.88), transparent 24%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 252, 255, 0.98) 100%);
+    }
+
+    .race-track {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      min-height: 190px;
+      padding: 24px 20px 30px;
+      background:
+        linear-gradient(180deg, #dff5ff 0%, #effcff 32%, #b8ecb4 32%, #9fe09b 100%);
+      border: 2px solid rgba(255, 255, 255, 0.84);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .race-road {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 24px;
+      height: 82px;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, #4b5563 0%, #374151 100%);
+      box-shadow: inset 0 10px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    .race-road::before {
+      content: "";
+      position: absolute;
+      inset: 50% 20px auto;
+      height: 8px;
+      transform: translateY(-50%);
+      background-image: linear-gradient(90deg, #fef3c7 0 16%, transparent 16% 32%);
+      background-size: 86px 8px;
+    }
+
+    .finish-flag {
+      position: absolute;
+      right: 42px;
+      bottom: 124px;
+      font-size: 44px;
+    }
+
+    .car {
+      position: absolute;
+      left: 12%;
+      bottom: 54px;
+      font-size: clamp(42px, 6vw, 60px);
+      transition: left 0.55s ease;
+      filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.16));
+      transform: scaleX(-1);
+      transform-origin: center;
+    }
+
+    .cloud {
+      position: absolute;
+      top: 26px;
+      font-size: 30px;
+      opacity: 0.85;
+    }
+
+    .cloud.one {
+      left: 34px;
+    }
+
+    .cloud.two {
+      right: 140px;
+    }
+
+    .race-progress {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .meter {
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(32, 50, 77, 0.08);
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ffb703 0%, #ff7a59 50%, #ff4d6d 100%);
+      transition: width 0.35s ease;
+    }
+
+    .meter-text {
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .result-card {
+      text-align: center;
+      background:
+        radial-gradient(circle at top center, rgba(255, 255, 255, 0.9), transparent 30%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 250, 238, 0.98) 100%);
+    }
+
+    .result-emoji {
+      font-size: clamp(58px, 10vw, 96px);
+      margin-bottom: 12px;
+    }
+
+    .result-title {
+      font-size: clamp(30px, 4vw, 44px);
+      letter-spacing: -0.04em;
+    }
+
+    .result-text {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.5;
+      font-weight: 800;
+    }
+
+    .result-grid {
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      margin-top: 18px;
+    }
+
+    .result-box {
+      background: rgba(255, 255, 255, 0.86);
+      border-radius: 20px;
+      padding: 16px;
+      border: 2px solid rgba(91, 141, 239, 0.12);
+    }
+
+    .result-box strong {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .result-box span {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .achievement-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-top: 18px;
+    }
+
+    .achievement-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 253, 255, 0.98) 100%);
+      border: 2px solid rgba(91, 141, 239, 0.14);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .achievement-card.locked {
+      opacity: 0.55;
+      filter: grayscale(0.15);
+    }
+
+    .achievement-card .emoji {
+      font-size: 30px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .achievement-card strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .achievement-card p {
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .new-achievements {
+      margin-top: 18px;
+    }
+
+    .new-achievements h3 {
+      margin-bottom: 12px;
+      font-size: 22px;
+    }
+
+    .subtle-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .flash-correct {
+      animation: glow-correct 0.65s ease;
+    }
+
+    .flash-error {
+      animation: glow-error 0.55s ease;
+    }
+
+    .hero-attack {
+      animation: hero-punch 0.55s ease;
+    }
+
+    .hero-hit {
+      animation: hero-stumble 0.55s ease;
+    }
+
+    .monster-attack {
+      animation: monster-lunge 0.55s ease;
+    }
+
+    .monster-hit {
+      animation: monster-shake 0.48s ease;
+    }
+
+    .car-boost {
+      animation: car-bounce 0.55s ease;
+    }
+
+    .impact-correct {
+      animation: impact-burst-correct 0.55s ease;
+    }
+
+    .impact-wrong {
+      animation: impact-burst-wrong 0.55s ease;
+    }
+
+    .voice-btn {
+      min-height: 48px;
+      padding: 12px 18px;
+      font-size: 15px;
+    }
+
+    @keyframes pulse-correct {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wobble-error {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes glow-correct {
+      0% { box-shadow: var(--shadow); }
+      50% { box-shadow: 0 0 0 10px rgba(73, 220, 177, 0.24), var(--shadow); }
+      100% { box-shadow: var(--shadow); }
+    }
+
+    @keyframes glow-error {
+      0% { box-shadow: var(--shadow); }
+      50% { box-shadow: 0 0 0 10px rgba(255, 183, 3, 0.22), var(--shadow); }
+      100% { box-shadow: var(--shadow); }
+    }
+
+    @keyframes hero-punch {
+      0% { transform: translateX(0); }
+      40% { transform: translateX(18px) scale(1.04); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes monster-shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-10px) rotate(-2deg); }
+      40% { transform: translateX(10px) rotate(2deg); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes hero-stumble {
+      0% { transform: translateX(0) scale(1); }
+      25% { transform: translateX(-14px) rotate(-2deg) scale(0.99); }
+      45% { transform: translateX(8px) rotate(1deg); }
+      70% { transform: translateX(-6px); }
+      100% { transform: translateX(0) scale(1); }
+    }
+
+    @keyframes monster-lunge {
+      0% { transform: translateX(0) scale(1); }
+      35% { transform: translateX(-18px) scale(1.04) rotate(-2deg); }
+      65% { transform: translateX(-6px) scale(1.02); }
+      100% { transform: translateX(0) scale(1); }
+    }
+
+    @keyframes car-bounce {
+      0% { transform: scaleX(-1) translateY(0); }
+      30% { transform: scaleX(-1) translateY(-10px) scale(1.04); }
+      100% { transform: scaleX(-1) translateY(0); }
+    }
+
+    @keyframes sticker-pop {
+      0% { transform: scale(0.45); }
+      70% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes impact-burst-correct {
+      0% { transform: scale(1); box-shadow: var(--shadow-soft); }
+      35% { transform: scale(1.18) rotate(10deg); box-shadow: 0 0 0 12px rgba(73, 220, 177, 0.18), var(--shadow-soft); }
+      100% { transform: scale(1) rotate(0deg); box-shadow: var(--shadow-soft); }
+    }
+
+    @keyframes impact-burst-wrong {
+      0% { transform: scale(1); box-shadow: var(--shadow-soft); }
+      35% { transform: scale(1.18) rotate(-10deg); box-shadow: 0 0 0 12px rgba(255, 107, 107, 0.18), var(--shadow-soft); }
+      100% { transform: scale(1) rotate(0deg); box-shadow: var(--shadow-soft); }
+    }
+
+    @media (max-width: 860px) {
+      .arena {
+        grid-template-columns: 1fr;
+      }
+
+      .vs-bubble {
+        order: 2;
+      }
+
+      .fighter.hero {
+        order: 1;
+      }
+
+      .fighter.monster {
+        order: 3;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .app {
+        width: min(100%, calc(100% - 14px));
+        padding-top: 12px;
+      }
+
+      .card {
+        padding: 16px;
+        border-radius: 24px;
+      }
+
+      .answers-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .answer-btn {
+        min-height: 92px;
+      }
+
+      .topbar {
+        margin-bottom: 14px;
+      }
+
+      .logo-badge {
+        width: 62px;
+        height: 62px;
+        border-radius: 20px;
+      }
+
+      .header-actions,
+      .button-row,
+      .footer-actions {
+        width: 100%;
+      }
+
+      .header-actions button,
+      .button-row button,
+      .footer-actions button {
+        flex: 1 1 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="title-wrap">
+        <div class="logo-badge">📚👾</div>
+        <div>
+          <p class="eyebrow">Обучающая игра на русском</p>
+          <h1>БуквоМонстры</h1>
+          <p class="subtitle">Побег из Алфавитного мира: тренируем буквы, цифры, внимательность и доезжаем до финиша.</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="headerStatsBtn" class="secondary-btn">Статистика</button>
+        <button id="headerMenuBtn" class="ghost-btn hidden">Меню</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="start-screen" class="screen active">
+        <div class="card intro-card stack-lg">
+          <div class="hero-row">
+            <div>
+              <h2 class="section-title">Привет, герой!</h2>
+              <p class="lead">Помоги смелому герою победить добрых монстриков, найти буквы, цифры и выиграть весёлую гонку.</p>
+            </div>
+            <div class="hero-characters" aria-hidden="true">🦸‍♂️ 👾 🤖 🚗</div>
+          </div>
+
+          <div class="tip-card">
+            <strong>Подсказка для родителя:</strong>
+            <span>Игра помогает тренировать узнавание букв, цифр и внимательность в мягком и дружелюбном темпе.</span>
+          </div>
+
+          <div class="feature-card cloud-card">
+            <strong>Облачный профиль</strong>
+            <p>Так прогресс можно открыть на телефоне, планшете и компьютере. Один и тот же код игрока нужен на всех устройствах.</p>
+            <div id="home-cloud-panel" class="cloud-panel"></div>
+            <div class="button-row" style="margin-top: 14px;">
+              <button id="setupCloudBtn" class="secondary-btn">Настроить облако</button>
+              <button id="cloudLoadBtn" class="accent-btn">Загрузить из облака</button>
+              <button id="cloudSaveBtn" class="primary-btn">Сохранить в облако</button>
+            </div>
+          </div>
+
+          <div class="menu-grid">
+            <div class="feature-card">
+              <strong>Бои с монстрами</strong>
+              <p>Каждый правильный ответ помогает герою атаковать монстра и пройти уровень.</p>
+            </div>
+            <div class="feature-card">
+              <strong>Гонка до финиша</strong>
+              <p>Верный ответ двигает машинку вперёд. Ошибка не страшна, можно ехать дальше.</p>
+            </div>
+            <div class="feature-card">
+              <strong>Сохранение прогресса</strong>
+              <p>Лучший счёт, уровни и достижения сохраняются локально в браузере.</p>
+            </div>
+          </div>
+
+          <div id="home-stats" class="mini-stats-grid"></div>
+
+          <div class="button-row">
+            <button id="startGameBtn" class="primary-btn">Начать игру</button>
+            <button id="startStatsBtn" class="accent-btn">Открыть статистику</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="mode-screen" class="screen">
+        <div class="card stack-lg">
+          <div>
+            <h2 class="section-title">Выбери режим</h2>
+            <p class="section-text">Все задания короткие и понятные. Можно играть на телефоне и на компьютере.</p>
+          </div>
+
+          <div class="mode-grid">
+            <button class="mode-card" data-mode="letters" data-game="battle">
+              <div class="mode-icon">🔤</div>
+              <h3>Буквы</h3>
+              <p>Ищем буквы и узнаём, с какой буквы начинается слово.</p>
+              <div class="mode-chip-row">
+                <span class="chip">5 заданий</span>
+                <span class="chip success">Уровень <span id="letters-level-chip">1</span></span>
+              </div>
+            </button>
+
+            <button class="mode-card" data-mode="numbers" data-game="battle">
+              <div class="mode-icon">🔢</div>
+              <h3>Цифры</h3>
+              <p>Находим цифры и считаем предметы: яблоки, звёзды, игрушки и конфеты.</p>
+              <div class="mode-chip-row">
+                <span class="chip">5 заданий</span>
+                <span class="chip success">Уровень <span id="numbers-level-chip">1</span></span>
+              </div>
+            </button>
+
+            <button class="mode-card" data-mode="mixed" data-game="battle">
+              <div class="mode-icon">🌈</div>
+              <h3>Смешанный режим</h3>
+              <p>Буквы, цифры, счёт и слова в одном весёлом приключении.</p>
+              <div class="mode-chip-row">
+                <span class="chip">5 заданий</span>
+                <span class="chip success">Уровень <span id="mixed-level-chip">1</span></span>
+              </div>
+            </button>
+
+            <button class="mode-card" data-mode="mixed" data-game="race">
+              <div class="mode-icon">🏁</div>
+              <h3>Гонка</h3>
+              <p>Правильные ответы двигают машинку к финишу. Нужно доехать до конца трассы.</p>
+              <div class="mode-chip-row">
+                <span class="chip warning">6–7 вопросов</span>
+                <span class="chip success">Трасса <span id="race-level-chip">1</span></span>
+              </div>
+            </button>
+          </div>
+
+          <div class="button-row">
+            <button id="modeBackBtn" class="secondary-btn">Вернуться в меню</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="battle-screen" class="screen">
+        <div class="stack-lg">
+          <div class="card status-card">
+            <div class="status-grid">
+              <div class="status-tile">
+                <strong>Режим</strong>
+                <span id="battleModeLabel">Буквы</span>
+              </div>
+              <div class="status-tile">
+                <strong>Уровень</strong>
+                <span id="battleLevelLabel">1</span>
+              </div>
+              <div class="status-tile">
+                <strong>Очки</strong>
+                <span id="battleScoreLabel">0</span>
+              </div>
+              <div class="status-tile">
+                <strong>Задание</strong>
+                <span id="battleTaskLabel">1 / 5</span>
+              </div>
+            </div>
+
+            <div class="arena">
+              <div id="hero-card" class="fighter hero">
+                <div class="avatar-stage">
+                  <span id="hero-emoji" class="fighter-emoji">🦸‍♂️</span>
+                </div>
+                <h3 id="hero-name">Герой</h3>
+                <p>Выбери правильный ответ и помоги победить монстра.</p>
+                <div class="hp-top">
+                  <span>Здоровье героя</span>
+                  <span id="hero-hp-text">100 / 100</span>
+                </div>
+                <div class="hp-bar">
+                  <span id="hero-hp-fill" class="hp-fill"></span>
+                </div>
+              </div>
+
+              <div class="vs-bubble">
+                <div id="battle-vs-icon" class="vs-icon">💥</div>
+                <div id="battle-speech" class="speech">Нажми на правильный ответ.</div>
+              </div>
+
+              <div id="monster-card" class="fighter monster">
+                <div class="avatar-stage">
+                  <span id="monster-emoji" class="fighter-emoji">👾</span>
+                  <div id="monster-damage" class="damage-layer" aria-hidden="true"></div>
+                </div>
+                <h3 id="monster-name">Монстрик</h3>
+                <p id="monster-line">Я люблю загадки и не кусаюсь.</p>
+                <div class="hp-top">
+                  <span>Здоровье монстра</span>
+                  <span id="monster-hp-text">80 / 80</span>
+                </div>
+                <div class="hp-bar">
+                  <span id="monster-hp-fill" class="hp-fill monster"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="battle-question-card" class="card question-card">
+            <p class="question-label">Задание</p>
+            <h2 id="battle-question-title" class="question-title">Найди букву: А</h2>
+            <p id="battle-question-help" class="question-help hidden"></p>
+            <div class="info-chip-row">
+              <button id="battleSpeakBtn" class="secondary-btn voice-btn" type="button">🔊 Повторить вопрос</button>
+            </div>
+            <div id="battle-visual" class="visual-box"></div>
+            <div id="battle-answers" class="answers-grid"></div>
+            <div id="battle-feedback" class="feedback-banner soft" role="status" aria-live="polite">Помоги герою выбрать правильный ответ.</div>
+            <div class="footer-actions">
+              <button id="battleMenuBtn" class="secondary-btn">Вернуться в меню</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="race-screen" class="screen">
+        <div class="stack-lg">
+          <div class="card status-card">
+            <div class="status-grid">
+              <div class="status-tile">
+                <strong>Режим</strong>
+                <span>Гонка</span>
+              </div>
+              <div class="status-tile">
+                <strong>Трасса</strong>
+                <span id="raceLevelLabel">1</span>
+              </div>
+              <div class="status-tile">
+                <strong>Очки</strong>
+                <span id="raceScoreLabel">0</span>
+              </div>
+              <div class="status-tile">
+                <strong>Вопрос</strong>
+                <span id="raceTaskLabel">1 / 6</span>
+              </div>
+            </div>
+
+            <div class="race-card card">
+              <div class="race-track">
+                <div class="cloud one">☁️</div>
+                <div class="cloud two">☁️</div>
+                <div class="finish-flag">🏁</div>
+                <div class="race-road"></div>
+                <div id="race-car" class="car">🚗</div>
+              </div>
+
+              <div class="race-progress">
+                <div class="meter">
+                  <div id="race-progress-fill" class="meter-fill"></div>
+                </div>
+                <p id="race-progress-text" class="meter-text">До финиша осталось ещё немного.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="race-question-card" class="card question-card">
+            <p class="question-label">Вопрос</p>
+            <h2 id="race-question-title" class="question-title">Сколько предметов?</h2>
+            <p id="race-question-help" class="question-help hidden"></p>
+            <div class="info-chip-row">
+              <button id="raceSpeakBtn" class="secondary-btn voice-btn" type="button">🔊 Повторить вопрос</button>
+            </div>
+            <div id="race-visual" class="visual-box"></div>
+            <div id="race-answers" class="answers-grid"></div>
+            <div id="race-feedback" class="feedback-banner soft" role="status" aria-live="polite">Поехали к финишу!</div>
+            <div class="footer-actions">
+              <button id="raceMenuBtn" class="secondary-btn">Вернуться в меню</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="result-screen" class="screen">
+        <div class="card result-card">
+          <div id="result-emoji" class="result-emoji">🎉</div>
+          <h2 id="result-title" class="result-title">Уровень пройден!</h2>
+          <p id="result-text" class="result-text">Ты отлично справился и помог герою пройти дальше.</p>
+
+          <div id="result-grid" class="result-grid"></div>
+
+          <div id="new-achievements" class="new-achievements hidden">
+            <h3>Новые достижения</h3>
+            <div id="new-achievements-grid" class="achievement-grid"></div>
+          </div>
+
+          <div class="button-row" style="margin-top: 18px;">
+            <button id="nextLevelBtn" class="primary-btn">Следующий уровень</button>
+            <button id="retryBtn" class="accent-btn">Попробовать ещё раз</button>
+            <button id="resultMenuBtn" class="secondary-btn">Вернуться в меню</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="stats-screen" class="screen">
+        <div class="card stack-lg">
+          <div>
+            <h2 class="section-title">Статистика</h2>
+            <p class="section-text">Прогресс сохраняется в браузере автоматически через localStorage.</p>
+          </div>
+
+          <div id="stats-grid" class="stats-grid"></div>
+
+          <div>
+            <h3 class="section-title" style="font-size: 26px;">Достижения</h3>
+            <p class="section-text">Открывай новые значки за внимательность и правильные ответы.</p>
+            <div id="achievements-grid" class="achievement-grid"></div>
+          </div>
+
+          <div id="stats-cloud-panel" class="cloud-panel"></div>
+
+          <p class="subtle-note">Код игры подготовлен к расширению: позже сюда легко добавить второго игрока, новые типы заданий и таблицу рекордов.</p>
+
+          <div class="button-row">
+            <button id="statsMenuBtn" class="secondary-btn">Вернуться в меню</button>
+            <button id="resetProgressBtn" class="danger-btn">Сбросить прогресс</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Основные игровые данные. Массивы легко расширять новыми словами, монстрами и типами задач.
+    const STORAGE_KEY = "bukvomonstry-progress-v1";
+    const PROFILE_KEY = "bukvomonstry-profile-v1";
+    const TASKS_PER_BATTLE_LEVEL = 5;
+    const CLOUD_SYNC_DEBOUNCE_MS = 1200;
+    const HEROES = [
+      { id: "hero-1", name: "Супергерой", emoji: "🦸‍♂️" },
+      { id: "hero-2", name: "Смелый малыш", emoji: "🧒" }
+    ];
+    const LETTERS = [
+      "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й",
+      "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф",
+      "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я"
+    ];
+    const ITEM_EMOJIS = ["🍎", "⭐", "🧸", "⚽", "🍬"];
+    const WORD_BANK = [
+      { emoji: "🐱", word: "КОТ" },
+      { emoji: "🐶", word: "СОБАКА" },
+      { emoji: "🏠", word: "ДОМ" },
+      { emoji: "🚗", word: "МАШИНА" },
+      { emoji: "🍎", word: "ЯБЛОКО" },
+      { emoji: "🌙", word: "ЛУНА" },
+      { emoji: "🐟", word: "РЫБА" },
+      { emoji: "🌳", word: "ДЕРЕВО" },
+      { emoji: "🦊", word: "ЛИСА" },
+      { emoji: "🎈", word: "ШАР" }
+    ];
+    const MONSTERS = [
+      { emoji: "👾", name: "Пиксельный слизик", line: "Поиграем в буквы?" },
+      { emoji: "🤖", name: "Робо-Буквик", line: "Мне нравятся правильные ответы!" },
+      { emoji: "🧟‍♂️", name: "Смешной зомби", line: "Я добрый и люблю считать." },
+      { emoji: "🐲", name: "Дракоша Фыр", line: "Пых-пых! Найди нужный знак!" }
+    ];
+    const GOOD_MESSAGES = ["Отлично!", "Молодец!", "Супер!"];
+    const SOFT_MESSAGES = ["Почти! Попробуй ещё", "Ничего, давай ещё раз!", "Спокойно, у тебя получится!"];
+    const MODE_LABELS = {
+      letters: "Буквы",
+      numbers: "Цифры",
+      mixed: "Смешанный"
+    };
+    const ACHIEVEMENTS = [
+      { id: "firstMonster", emoji: "⚔️", title: "Первый монстр побеждён", description: "Выиграй первый бой." },
+      { id: "tenCorrect", emoji: "🌟", title: "10 правильных ответов", description: "Дай 10 верных ответов в любых режимах." },
+      { id: "racer", emoji: "🏎️", title: "Гонщик", description: "Доедь до финиша в режиме гонки." },
+      { id: "lettersMaster", emoji: "🔤", title: "Знаток букв", description: "Собери 8 правильных ответов по буквам." },
+      { id: "numbersMaster", emoji: "🔢", title: "Знаток цифр", description: "Собери 8 правильных ответов по цифрам и счёту." }
+    ];
+
+    const dom = {
+      screens: {
+        start: document.getElementById("start-screen"),
+        mode: document.getElementById("mode-screen"),
+        battle: document.getElementById("battle-screen"),
+        race: document.getElementById("race-screen"),
+        result: document.getElementById("result-screen"),
+        stats: document.getElementById("stats-screen")
+      },
+      headerStatsBtn: document.getElementById("headerStatsBtn"),
+      headerMenuBtn: document.getElementById("headerMenuBtn"),
+      startGameBtn: document.getElementById("startGameBtn"),
+      startStatsBtn: document.getElementById("startStatsBtn"),
+      modeBackBtn: document.getElementById("modeBackBtn"),
+      modeCards: Array.from(document.querySelectorAll(".mode-card")),
+      homeStats: document.getElementById("home-stats"),
+      homeCloudPanel: document.getElementById("home-cloud-panel"),
+      statsCloudPanel: document.getElementById("stats-cloud-panel"),
+      setupCloudBtn: document.getElementById("setupCloudBtn"),
+      cloudLoadBtn: document.getElementById("cloudLoadBtn"),
+      cloudSaveBtn: document.getElementById("cloudSaveBtn"),
+      statsGrid: document.getElementById("stats-grid"),
+      achievementsGrid: document.getElementById("achievements-grid"),
+      lettersLevelChip: document.getElementById("letters-level-chip"),
+      numbersLevelChip: document.getElementById("numbers-level-chip"),
+      mixedLevelChip: document.getElementById("mixed-level-chip"),
+      raceLevelChip: document.getElementById("race-level-chip"),
+      battleModeLabel: document.getElementById("battleModeLabel"),
+      battleLevelLabel: document.getElementById("battleLevelLabel"),
+      battleScoreLabel: document.getElementById("battleScoreLabel"),
+      battleTaskLabel: document.getElementById("battleTaskLabel"),
+      heroCard: document.getElementById("hero-card"),
+      heroEmoji: document.getElementById("hero-emoji"),
+      heroName: document.getElementById("hero-name"),
+      heroHpText: document.getElementById("hero-hp-text"),
+      heroHpFill: document.getElementById("hero-hp-fill"),
+      battleSpeech: document.getElementById("battle-speech"),
+      battleVsIcon: document.getElementById("battle-vs-icon"),
+      monsterCard: document.getElementById("monster-card"),
+      monsterEmoji: document.getElementById("monster-emoji"),
+      monsterDamage: document.getElementById("monster-damage"),
+      monsterName: document.getElementById("monster-name"),
+      monsterLine: document.getElementById("monster-line"),
+      monsterHpText: document.getElementById("monster-hp-text"),
+      monsterHpFill: document.getElementById("monster-hp-fill"),
+      battleQuestionCard: document.getElementById("battle-question-card"),
+      battleQuestionTitle: document.getElementById("battle-question-title"),
+      battleQuestionHelp: document.getElementById("battle-question-help"),
+      battleSpeakBtn: document.getElementById("battleSpeakBtn"),
+      battleVisual: document.getElementById("battle-visual"),
+      battleAnswers: document.getElementById("battle-answers"),
+      battleFeedback: document.getElementById("battle-feedback"),
+      battleMenuBtn: document.getElementById("battleMenuBtn"),
+      raceLevelLabel: document.getElementById("raceLevelLabel"),
+      raceScoreLabel: document.getElementById("raceScoreLabel"),
+      raceTaskLabel: document.getElementById("raceTaskLabel"),
+      raceCar: document.getElementById("race-car"),
+      raceProgressFill: document.getElementById("race-progress-fill"),
+      raceProgressText: document.getElementById("race-progress-text"),
+      raceQuestionCard: document.getElementById("race-question-card"),
+      raceQuestionTitle: document.getElementById("race-question-title"),
+      raceQuestionHelp: document.getElementById("race-question-help"),
+      raceSpeakBtn: document.getElementById("raceSpeakBtn"),
+      raceVisual: document.getElementById("race-visual"),
+      raceAnswers: document.getElementById("race-answers"),
+      raceFeedback: document.getElementById("race-feedback"),
+      raceMenuBtn: document.getElementById("raceMenuBtn"),
+      resultEmoji: document.getElementById("result-emoji"),
+      resultTitle: document.getElementById("result-title"),
+      resultText: document.getElementById("result-text"),
+      resultGrid: document.getElementById("result-grid"),
+      nextLevelBtn: document.getElementById("nextLevelBtn"),
+      retryBtn: document.getElementById("retryBtn"),
+      resultMenuBtn: document.getElementById("resultMenuBtn"),
+      newAchievements: document.getElementById("new-achievements"),
+      newAchievementsGrid: document.getElementById("new-achievements-grid"),
+      statsMenuBtn: document.getElementById("statsMenuBtn"),
+      resetProgressBtn: document.getElementById("resetProgressBtn")
+    };
+
+    // Состояние игры отделено от DOM, чтобы позже было проще добавить второго игрока и новые режимы.
+    const state = {
+      screen: "start",
+      gameType: null,
+      mode: null,
+      level: 1,
+      totalTasks: TASKS_PER_BATTLE_LEVEL,
+      taskIndex: 0,
+      currentQuestion: null,
+      players: [],
+      activePlayerIndex: 0,
+      monster: null,
+      feedback: "Готов к заданию?",
+      inputLocked: false,
+      selectedAnswer: null,
+      revealAnswers: false,
+      sessionScore: 0,
+      sessionCorrect: 0,
+      sessionMistakes: 0,
+      race: {
+        finishSteps: 5,
+        currentSteps: 0
+      },
+      result: null,
+      lastUnlocked: [],
+      pendingTimer: null,
+      lastSpokenQuestionId: null
+    };
+
+    let progress = loadProgress();
+    let profile = loadProfile();
+    let audioContext = null;
+    let cloudSyncTimer = null;
+
+    function createDefaultProgress() {
+      return {
+        bestScore: 0,
+        levelsCompleted: 0,
+        correctAnswers: 0,
+        mistakes: 0,
+        battleLevel: 1,
+        raceLevel: 1,
+        updatedAt: "",
+        achievements: [],
+        categoryCorrect: {
+          letters: 0,
+          numbers: 0
+        }
+      };
+    }
+
+    function createDefaultProfile() {
+      return {
+        playerName: "Игрок",
+        playerId: generatePlayerId(),
+        appsScriptUrl: "",
+        lastSyncedAt: "",
+        lastSyncStatus: "Облако ещё не настроено."
+      };
+    }
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          return createDefaultProgress();
+        }
+
+        const saved = JSON.parse(raw);
+        return {
+          ...createDefaultProgress(),
+          ...saved,
+          categoryCorrect: {
+            ...createDefaultProgress().categoryCorrect,
+            ...(saved.categoryCorrect || {})
+          },
+          achievements: Array.isArray(saved.achievements) ? saved.achievements : []
+        };
+      } catch (error) {
+        return createDefaultProgress();
+      }
+    }
+
+    function loadProfile() {
+      try {
+        const raw = localStorage.getItem(PROFILE_KEY);
+        if (!raw) {
+          return createDefaultProfile();
+        }
+
+        const saved = JSON.parse(raw);
+        const profileData = {
+          ...createDefaultProfile(),
+          ...saved
+        };
+
+        profileData.playerId = normalizePlayerId(profileData.playerId) || generatePlayerId();
+        profileData.appsScriptUrl = normalizeAppsScriptUrl(profileData.appsScriptUrl);
+        return profileData;
+      } catch (error) {
+        return createDefaultProfile();
+      }
+    }
+
+    function saveProfile() {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    }
+
+    function saveProgress(options = {}) {
+      if (!options.preserveTimestamp) {
+        progress.updatedAt = new Date().toISOString();
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      if (!options.skipCloud) {
+        scheduleCloudSave();
+      }
+    }
+
+    function createPlayers() {
+      return [
+        {
+          ...HEROES[0],
+          maxHp: 100,
+          hp: 100,
+          score: 0
+        }
+      ];
+    }
+
+    function getActivePlayer() {
+      return state.players[state.activePlayerIndex];
+    }
+
+    function randomItem(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function generatePlayerId() {
+      return Math.random().toString(36).slice(2, 8).toUpperCase();
+    }
+
+    function normalizePlayerId(value) {
+      return String(value || "")
+        .toUpperCase()
+        .replace(/[^A-Z0-9-]/g, "")
+        .slice(0, 12);
+    }
+
+    function normalizeAppsScriptUrl(value) {
+      return String(value || "").trim();
+    }
+
+    function formatDateTime(value) {
+      if (!value) {
+        return "ещё не было";
+      }
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        return "ещё не было";
+      }
+
+      return date.toLocaleString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function isCloudReady() {
+      return Boolean(profile.appsScriptUrl && profile.playerId);
+    }
+
+    function renderCloudPanels() {
+      const configured = isCloudReady();
+      const statusClass = configured ? "cloud-status-good" : "cloud-status-warn";
+      const statusText = configured
+        ? profile.lastSyncStatus || "Облако готово."
+        : "Сейчас прогресс сохраняется только на этом устройстве.";
+      const summaryHtml = `
+        <div class="info-chip-row">
+          <span class="chip success">Игрок: ${escapeHtml(profile.playerName)}</span>
+          <span class="code-chip">${escapeHtml(profile.playerId)}</span>
+          <span class="chip ${configured ? "success" : "warning"}">${configured ? "Облако готово" : "Только локально"}</span>
+        </div>
+        <p class="${statusClass}">${escapeHtml(statusText)}</p>
+        <p>Последняя синхронизация: ${escapeHtml(formatDateTime(profile.lastSyncedAt))}.</p>
+        <p>${configured
+          ? "На другом устройстве введи тот же код игрока и ту же ссылку Apps Script."
+          : "После публикации Apps Script вставь его web app URL, и прогресс будет доступен на всех устройствах."}</p>
+      `;
+
+      dom.homeCloudPanel.innerHTML = summaryHtml;
+      dom.statsCloudPanel.innerHTML = summaryHtml;
+    }
+
+    function setCloudStatus(message, lastSyncedAt = profile.lastSyncedAt) {
+      profile.lastSyncStatus = message;
+      profile.lastSyncedAt = lastSyncedAt;
+      saveProfile();
+      renderCloudPanels();
+    }
+
+    function setScreen(screenName) {
+      state.screen = screenName;
+      Object.entries(dom.screens).forEach(([key, node]) => {
+        node.classList.toggle("active", key === screenName);
+      });
+      dom.headerMenuBtn.classList.toggle("hidden", screenName === "start" || screenName === "mode");
+    }
+
+    function clearPendingTimer() {
+      if (state.pendingTimer) {
+        window.clearTimeout(state.pendingTimer);
+        state.pendingTimer = null;
+      }
+    }
+
+    function stopSpeech() {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      state.lastSpokenQuestionId = null;
+    }
+
+    function goToMenu() {
+      clearPendingTimer();
+      stopSpeech();
+      state.gameType = null;
+      state.mode = null;
+      state.result = null;
+      state.currentQuestion = null;
+      renderHomeStats();
+      renderModeLevels();
+      setScreen("start");
+    }
+
+    function showModeScreen() {
+      stopSpeech();
+      renderModeLevels();
+      setScreen("mode");
+    }
+
+    function renderHomeStats() {
+      const cards = [
+        { value: progress.bestScore, label: "Лучший счёт" },
+        { value: progress.levelsCompleted, label: "Пройдено уровней" },
+        { value: progress.correctAnswers, label: "Правильных ответов" },
+        { value: progress.achievements.length, label: "Достижений" }
+      ];
+
+      dom.homeStats.innerHTML = cards.map((card) => `
+        <div class="mini-stat">
+          <div class="stat-number">${card.value}</div>
+          <div class="stat-label">${card.label}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderModeLevels() {
+      dom.lettersLevelChip.textContent = progress.battleLevel;
+      dom.numbersLevelChip.textContent = progress.battleLevel;
+      dom.mixedLevelChip.textContent = progress.battleLevel;
+      dom.raceLevelChip.textContent = progress.raceLevel;
+    }
+
+    function renderStatsScreen() {
+      const statsCards = [
+        { value: progress.bestScore, label: "Лучший счёт" },
+        { value: progress.levelsCompleted, label: "Пройдено уровней" },
+        { value: progress.correctAnswers, label: "Правильных ответов" },
+        { value: progress.mistakes, label: "Ошибок" },
+        { value: progress.battleLevel, label: "Следующий боевой уровень" },
+        { value: progress.raceLevel, label: "Следующая трасса" }
+      ];
+
+      dom.statsGrid.innerHTML = statsCards.map((card) => `
+        <div class="mini-stat">
+          <div class="stat-number">${card.value}</div>
+          <div class="stat-label">${card.label}</div>
+        </div>
+      `).join("");
+
+      dom.achievementsGrid.innerHTML = ACHIEVEMENTS.map((achievement) => {
+        const unlocked = progress.achievements.includes(achievement.id);
+        return `
+          <div class="achievement-card ${unlocked ? "" : "locked"}">
+            <span class="emoji">${achievement.emoji}</span>
+            <strong>${achievement.title}</strong>
+            <p>${achievement.description}</p>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function normalizeProgressSnapshot(raw) {
+      const base = createDefaultProgress();
+      const snapshot = {
+        ...base,
+        ...(raw || {}),
+        categoryCorrect: {
+          ...base.categoryCorrect,
+          ...((raw && raw.categoryCorrect) || {})
+        },
+        achievements: Array.isArray(raw && raw.achievements) ? raw.achievements : []
+      };
+
+      snapshot.updatedAt = raw && raw.updatedAt ? raw.updatedAt : base.updatedAt;
+      return snapshot;
+    }
+
+    function getTimestampValue(value) {
+      if (!value) {
+        return 0;
+      }
+      const time = new Date(value).getTime();
+      return Number.isNaN(time) ? 0 : time;
+    }
+
+    function selectNewestProgress(localSnapshot, remoteSnapshot) {
+      const localTime = getTimestampValue(localSnapshot.updatedAt);
+      const remoteTime = getTimestampValue(remoteSnapshot.updatedAt);
+      return remoteTime > localTime ? remoteSnapshot : localSnapshot;
+    }
+
+    function buildCloudPayload() {
+      return {
+        playerId: profile.playerId,
+        playerName: profile.playerName,
+        bestScore: progress.bestScore,
+        levelsCompleted: progress.levelsCompleted,
+        correctAnswers: progress.correctAnswers,
+        mistakes: progress.mistakes,
+        battleLevel: progress.battleLevel,
+        raceLevel: progress.raceLevel,
+        lettersCorrect: progress.categoryCorrect.letters,
+        numbersCorrect: progress.categoryCorrect.numbers,
+        achievementsJson: JSON.stringify(progress.achievements),
+        updatedAt: progress.updatedAt
+      };
+    }
+
+    function cloudRequest(action, params = {}) {
+      return new Promise((resolve, reject) => {
+        if (!isCloudReady()) {
+          reject(new Error("Облако ещё не настроено."));
+          return;
+        }
+
+        const callbackName = `__bukvoCloud_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        const url = new URL(profile.appsScriptUrl);
+        url.searchParams.set("action", action);
+        url.searchParams.set("prefix", callbackName);
+
+        Object.entries(params).forEach(([key, value]) => {
+          url.searchParams.set(key, String(value ?? ""));
+        });
+
+        const script = document.createElement("script");
+        script.async = true;
+
+        const cleanup = () => {
+          window.clearTimeout(timeoutId);
+          delete window[callbackName];
+          script.remove();
+        };
+
+        const timeoutId = window.setTimeout(() => {
+          cleanup();
+          reject(new Error("Сервер Google Sheets не ответил вовремя."));
+        }, 12000);
+
+        window[callbackName] = (payload) => {
+          cleanup();
+          resolve(payload);
+        };
+
+        script.onerror = () => {
+          cleanup();
+          reject(new Error("Не удалось обратиться к Google Apps Script."));
+        };
+
+        script.src = url.toString();
+        document.body.appendChild(script);
+      });
+    }
+
+    function scheduleCloudSave() {
+      if (cloudSyncTimer) {
+        window.clearTimeout(cloudSyncTimer);
+        cloudSyncTimer = null;
+      }
+
+      if (!isCloudReady()) {
+        return;
+      }
+
+      cloudSyncTimer = window.setTimeout(() => {
+        syncProgressToCloud({ silent: true });
+      }, CLOUD_SYNC_DEBOUNCE_MS);
+    }
+
+    async function syncProgressToCloud({ silent = false } = {}) {
+      if (cloudSyncTimer) {
+        window.clearTimeout(cloudSyncTimer);
+        cloudSyncTimer = null;
+      }
+
+      if (!isCloudReady()) {
+        if (!silent) {
+          window.alert("Сначала настрой облако: нужен код игрока и URL Google Apps Script.");
+        }
+        return false;
+      }
+
+      try {
+        setCloudStatus("Сохраняю прогресс в Google Sheets...");
+        const response = await cloudRequest("saveProgress", buildCloudPayload());
+
+        if (!response || !response.ok) {
+          throw new Error((response && response.error) || "Не удалось сохранить прогресс.");
+        }
+
+        if (response.progress) {
+          const remoteSnapshot = normalizeProgressSnapshot(response.progress);
+          progress = selectNewestProgress(progress, remoteSnapshot);
+          saveProgress({ skipCloud: true, preserveTimestamp: true });
+        }
+
+        setCloudStatus("Прогресс сохранён в Google Sheets.", response.updatedAt || progress.updatedAt);
+        renderHomeStats();
+        renderModeLevels();
+        renderStatsScreen();
+        return true;
+      } catch (error) {
+        setCloudStatus(`Ошибка синхронизации: ${error.message}`);
+        if (!silent) {
+          window.alert(`Не получилось сохранить прогресс.\n\n${error.message}`);
+        }
+        return false;
+      }
+    }
+
+    async function loadProgressFromCloud({ silent = false } = {}) {
+      if (!isCloudReady()) {
+        if (!silent) {
+          window.alert("Сначала настрой облако: нужен код игрока и URL Google Apps Script.");
+        }
+        return false;
+      }
+
+      try {
+        setCloudStatus("Загружаю прогресс из Google Sheets...");
+        const response = await cloudRequest("getProgress", { playerId: profile.playerId });
+
+        if (!response || !response.ok) {
+          throw new Error((response && response.error) || "Не удалось загрузить прогресс.");
+        }
+
+        if (!response.found || !response.progress) {
+          setCloudStatus("В Google Sheets пока нет сохранения для этого кода игрока.");
+          if (!silent) {
+            window.alert("Для этого кода игрока сохранение пока не найдено. Сначала сыграй и нажми «Сохранить в облако».");
+          }
+          return false;
+        }
+
+        const localBefore = normalizeProgressSnapshot(progress);
+        const remoteSnapshot = normalizeProgressSnapshot(response.progress);
+        const chosenSnapshot = selectNewestProgress(localBefore, remoteSnapshot);
+        const usedRemote = chosenSnapshot === remoteSnapshot;
+
+        progress = chosenSnapshot;
+        if (response.playerName) {
+          profile.playerName = response.playerName;
+        }
+        saveProfile();
+        saveProgress({ skipCloud: true, preserveTimestamp: true });
+        renderHomeStats();
+        renderModeLevels();
+        renderStatsScreen();
+        renderCloudPanels();
+        setCloudStatus(
+          usedRemote
+            ? "Прогресс загружен из облака."
+            : "Локальный прогресс уже новее облачной версии.",
+          remoteSnapshot.updatedAt || progress.updatedAt
+        );
+        return true;
+      } catch (error) {
+        setCloudStatus(`Ошибка загрузки: ${error.message}`);
+        if (!silent) {
+          window.alert(`Не получилось загрузить прогресс.\n\n${error.message}`);
+        }
+        return false;
+      }
+    }
+
+    function configureCloudProfile() {
+      const playerName = window.prompt("Имя игрока", profile.playerName);
+      if (playerName === null) {
+        return;
+      }
+
+      const playerIdInput = window.prompt(
+        "Код игрока. Одинаковый код нужен на всех устройствах.",
+        profile.playerId
+      );
+      if (playerIdInput === null) {
+        return;
+      }
+
+      const appsScriptUrlInput = window.prompt(
+        "URL web app из Google Apps Script. Если его ещё нет, можно оставить пустым и настроить позже.",
+        profile.appsScriptUrl
+      );
+      if (appsScriptUrlInput === null) {
+        return;
+      }
+
+      profile.playerName = String(playerName).trim() || "Игрок";
+      profile.playerId = normalizePlayerId(playerIdInput) || generatePlayerId();
+      profile.appsScriptUrl = normalizeAppsScriptUrl(appsScriptUrlInput);
+      profile.lastSyncStatus = profile.appsScriptUrl
+        ? "Облако настроено. Можно загружать и сохранять прогресс."
+        : "Облако пока не настроено. Нужен URL Google Apps Script.";
+
+      saveProfile();
+      renderCloudPanels();
+      renderStatsScreen();
+    }
+
+    function openStats() {
+      clearPendingTimer();
+      stopSpeech();
+      renderStatsScreen();
+      setScreen("stats");
+    }
+
+    function startGame(gameType, mode) {
+      clearPendingTimer();
+      stopSpeech();
+      state.gameType = gameType;
+      state.mode = mode;
+      state.level = gameType === "race" ? progress.raceLevel : progress.battleLevel;
+      state.totalTasks = gameType === "race"
+        ? clamp(6 + Math.floor((state.level - 1) / 2), 6, 7)
+        : TASKS_PER_BATTLE_LEVEL;
+      state.taskIndex = 0;
+      state.players = createPlayers();
+      state.activePlayerIndex = 0;
+      state.sessionScore = 0;
+      state.sessionCorrect = 0;
+      state.sessionMistakes = 0;
+      state.currentQuestion = null;
+      state.feedback = gameType === "race"
+        ? "Поехали!"
+        : "Готов к заданию?";
+      state.inputLocked = false;
+      state.selectedAnswer = null;
+      state.revealAnswers = false;
+      state.lastUnlocked = [];
+      state.result = null;
+      state.lastSpokenQuestionId = null;
+
+      if (gameType === "battle") {
+        state.monster = buildMonster(state.level);
+        setScreen("battle");
+        nextQuestion();
+        renderBattleScreen();
+      } else {
+        state.race = {
+          finishSteps: state.totalTasks - 1,
+          currentSteps: 0
+        };
+        setScreen("race");
+        nextQuestion();
+        renderRaceScreen();
+      }
+    }
+
+    function buildMonster(level) {
+      const template = MONSTERS[(level - 1) % MONSTERS.length];
+      return {
+        ...template,
+        hp: 80,
+        maxHp: 80
+      };
+    }
+
+    function nextQuestion() {
+      state.currentQuestion = generateQuestion(state.mode, state.level);
+      state.inputLocked = false;
+      state.selectedAnswer = null;
+      state.revealAnswers = false;
+    }
+
+    function generateQuestion(mode, level) {
+      const questionId = `q-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const availableTypes = {
+        letters: ["letter", "firstLetter"],
+        numbers: ["number", "count"],
+        mixed: ["letter", "number", "count", "firstLetter"]
+      }[mode];
+
+      const type = randomItem(availableTypes);
+
+      if (type === "letter") {
+        const pool = shuffle(LETTERS).slice(0, clamp(6 + level * 2, 6, LETTERS.length));
+        const answer = randomItem(pool);
+        return {
+          id: questionId,
+          type,
+          category: "letters",
+          prompt: "Найди букву",
+          help: "",
+          answer,
+          options: buildOptions(answer, pool),
+          visual: { type: "badge", value: "🔤" },
+          speechText: `Найди букву ${answer}`
+        };
+      }
+
+      if (type === "number") {
+        const maxNumber = clamp(4 + level, 4, 9);
+        const digits = Array.from({ length: maxNumber }, (_, index) => String(index + 1));
+        const answer = randomItem(digits);
+        return {
+          id: questionId,
+          type,
+          category: "numbers",
+          prompt: "Найди цифру",
+          help: "",
+          answer,
+          options: buildOptions(answer, digits),
+          visual: { type: "badge", value: "🔢" },
+          speechText: `Найди цифру ${answer}`
+        };
+      }
+
+      if (type === "count") {
+        const maxCount = clamp(3 + level, 3, 9);
+        const answerNumber = String(Math.floor(Math.random() * maxCount) + 1);
+        const emoji = randomItem(ITEM_EMOJIS);
+        const optionPool = Array.from(
+          { length: clamp(maxCount + 1, 3, 9) },
+          (_, index) => String(index + 1)
+        );
+        return {
+          id: questionId,
+          type,
+          category: "numbers",
+          prompt: "Сколько предметов?",
+          help: "",
+          answer: answerNumber,
+          options: buildOptions(answerNumber, optionPool),
+          visual: { type: "count", count: Number(answerNumber), emoji },
+          speechText: "Сколько предметов?"
+        };
+      }
+
+      const wordLimit = clamp(4 + level, 4, WORD_BANK.length);
+      const wordPool = shuffle(WORD_BANK).slice(0, wordLimit);
+      const wordEntry = randomItem(wordPool);
+      const answer = wordEntry.word[0];
+      const initialPool = Array.from(new Set(wordPool.map((entry) => entry.word[0])));
+      return {
+        id: questionId,
+        type: "firstLetter",
+        category: "letters",
+        prompt: "С какой буквы начинается слово?",
+        help: "",
+        answer,
+        options: buildOptions(answer, initialPool.length >= 3 ? initialPool : LETTERS),
+        visual: { type: "word", emoji: wordEntry.emoji, word: wordEntry.word },
+        speechText: `С какой буквы начинается слово ${wordEntry.word}?`
+      };
+    }
+
+    function buildOptions(answer, sourcePool) {
+      const otherOptions = shuffle(sourcePool.filter((item) => item !== answer)).slice(0, 2);
+      return shuffle([answer, ...otherOptions]);
+    }
+
+    function renderQuestionVisual(container, question) {
+      container.innerHTML = "";
+
+      if (question.visual.type === "badge") {
+        const badge = document.createElement("div");
+        badge.className = "target-badge";
+        badge.textContent = question.visual.value;
+        container.appendChild(badge);
+        return;
+      }
+
+      if (question.visual.type === "count") {
+        const wrap = document.createElement("div");
+        wrap.className = "count-visual";
+
+        for (let i = 0; i < question.visual.count; i += 1) {
+          const item = document.createElement("span");
+          item.textContent = question.visual.emoji;
+          wrap.appendChild(item);
+        }
+
+        container.appendChild(wrap);
+        return;
+      }
+
+      if (question.visual.type === "word") {
+        const wrap = document.createElement("div");
+        wrap.className = "word-visual";
+
+        const emoji = document.createElement("span");
+        emoji.className = "word-emoji";
+        emoji.textContent = question.visual.emoji;
+        wrap.appendChild(emoji);
+        container.appendChild(wrap);
+      }
+    }
+
+    function renderAnswerButtons(container, question, handler) {
+      container.innerHTML = "";
+
+      question.options.forEach((option) => {
+        const button = document.createElement("button");
+        button.className = "answer-btn";
+        button.textContent = option;
+
+        if (state.revealAnswers) {
+          if (option === question.answer) {
+            button.classList.add("is-correct");
+          } else if (option === state.selectedAnswer) {
+            button.classList.add("is-wrong");
+          }
+        }
+
+        button.disabled = state.inputLocked;
+        button.addEventListener("click", () => handler(option));
+        container.appendChild(button);
+      });
+    }
+
+    function renderMonsterDamage(monster) {
+      const damageCount = Math.floor((monster.maxHp - monster.hp) / 20);
+      const marks = [
+        { className: "bruise", content: "" },
+        { className: "bandage", content: "🩹" },
+        { className: "stars", content: "💫" },
+        { className: "patch", content: "🩹" }
+      ];
+
+      dom.monsterDamage.innerHTML = marks.map((mark, index) => `
+        <span class="damage-mark ${mark.className} ${index < damageCount ? "visible" : ""}">${mark.content}</span>
+      `).join("");
+    }
+
+    function speakText(text) {
+      if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") {
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "ru-RU";
+      utterance.rate = 0.9;
+      utterance.pitch = 1.05;
+      utterance.volume = 0.95;
+
+      const voices = window.speechSynthesis.getVoices();
+      const ruVoice = voices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith("ru"));
+      if (ruVoice) {
+        utterance.voice = ruVoice;
+      }
+
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function speakQuestion(question, force = false) {
+      if (!question) {
+        return;
+      }
+
+      if (!force && state.lastSpokenQuestionId === question.id) {
+        return;
+      }
+
+      state.lastSpokenQuestionId = question.id;
+      speakText(question.speechText || question.prompt);
+    }
+
+    function autoSpeakQuestion() {
+      if (!state.currentQuestion || state.inputLocked) {
+        return;
+      }
+
+      if (state.lastSpokenQuestionId === state.currentQuestion.id) {
+        return;
+      }
+
+      speakQuestion(state.currentQuestion);
+    }
+
+    function renderBattleScreen() {
+      const player = getActivePlayer();
+      const monster = state.monster;
+      const question = state.currentQuestion;
+
+      dom.battleModeLabel.textContent = MODE_LABELS[state.mode];
+      dom.battleLevelLabel.textContent = state.level;
+      dom.battleScoreLabel.textContent = player.score;
+      dom.battleTaskLabel.textContent = `${Math.min(state.taskIndex + 1, state.totalTasks)} / ${state.totalTasks}`;
+      dom.heroEmoji.textContent = player.emoji;
+      dom.heroName.textContent = player.name;
+      dom.heroHpText.textContent = `${player.hp} / ${player.maxHp}`;
+      dom.heroHpFill.style.width = `${(player.hp / player.maxHp) * 100}%`;
+
+      dom.monsterEmoji.textContent = monster.emoji;
+      dom.monsterName.textContent = monster.name;
+      dom.monsterLine.textContent = monster.line;
+      dom.monsterHpText.textContent = `${monster.hp} / ${monster.maxHp}`;
+      dom.monsterHpFill.style.width = `${(monster.hp / monster.maxHp) * 100}%`;
+      renderMonsterDamage(monster);
+      dom.battleSpeech.textContent = state.feedback;
+      if (!state.inputLocked) {
+        dom.battleVsIcon.textContent = "💥";
+      }
+
+      dom.battleQuestionTitle.textContent = question.prompt;
+      dom.battleQuestionHelp.textContent = "";
+      renderQuestionVisual(dom.battleVisual, question);
+      renderAnswerButtons(dom.battleAnswers, question, handleBattleAnswer);
+      renderFeedback(dom.battleFeedback, state.feedback, state.selectedAnswer && state.selectedAnswer === question.answer);
+      autoSpeakQuestion();
+    }
+
+    function renderRaceScreen() {
+      const player = getActivePlayer();
+      const question = state.currentQuestion;
+      const progressPercent = (state.race.currentSteps / state.race.finishSteps) * 100;
+      const carLeft = 12 + progressPercent * 0.74;
+
+      dom.raceLevelLabel.textContent = state.level;
+      dom.raceScoreLabel.textContent = player.score;
+      dom.raceTaskLabel.textContent = `${Math.min(state.taskIndex + 1, state.totalTasks)} / ${state.totalTasks}`;
+      dom.raceQuestionTitle.textContent = question.prompt;
+      dom.raceQuestionHelp.textContent = "";
+      dom.raceProgressFill.style.width = `${progressPercent}%`;
+      dom.raceCar.style.left = `${carLeft}%`;
+      dom.raceProgressText.textContent = `Шагов до финиша: ${Math.max(0, state.race.finishSteps - state.race.currentSteps)}.`;
+      renderQuestionVisual(dom.raceVisual, question);
+      renderAnswerButtons(dom.raceAnswers, question, handleRaceAnswer);
+      renderFeedback(dom.raceFeedback, state.feedback, state.selectedAnswer && state.selectedAnswer === question.answer);
+      autoSpeakQuestion();
+    }
+
+    function renderFeedback(node, text, wasCorrect) {
+      node.textContent = text;
+      node.classList.remove("good", "soft");
+      node.classList.add(wasCorrect ? "good" : "soft");
+    }
+
+    function playBattleHitAnimation(kind) {
+      if (kind === "heroAttack") {
+        dom.battleVsIcon.textContent = "💥";
+        animateNode(dom.battleVsIcon, "impact-correct");
+        animateNode(dom.heroCard, "hero-attack");
+        animateNode(dom.monsterCard, "monster-hit");
+        return;
+      }
+
+      dom.battleVsIcon.textContent = "💢";
+      animateNode(dom.battleVsIcon, "impact-wrong");
+      animateNode(dom.monsterCard, "monster-attack");
+      animateNode(dom.heroCard, "hero-hit");
+    }
+
+    function handleBattleAnswer(answer) {
+      if (state.inputLocked) {
+        return;
+      }
+
+      const player = getActivePlayer();
+      const question = state.currentQuestion;
+      const correct = answer === question.answer;
+
+      state.inputLocked = true;
+      state.selectedAnswer = answer;
+      state.revealAnswers = true;
+      state.taskIndex += 1;
+
+      if (correct) {
+        player.score += 10;
+        state.sessionScore = player.score;
+        state.sessionCorrect += 1;
+        progress.correctAnswers += 1;
+        registerCategoryProgress(question.category);
+        state.monster.hp = Math.max(0, state.monster.hp - 20);
+        state.feedback = randomItem(GOOD_MESSAGES);
+        playSound("correct");
+        animateNode(dom.battleQuestionCard, "flash-correct");
+        playBattleHitAnimation("heroAttack");
+      } else {
+        player.hp = Math.max(0, player.hp - 10);
+        state.sessionMistakes += 1;
+        progress.mistakes += 1;
+        state.feedback = randomItem(SOFT_MESSAGES);
+        playSound("wrong");
+        animateNode(dom.battleQuestionCard, "flash-error");
+        playBattleHitAnimation("monsterAttack");
+      }
+
+      collectAchievements();
+      saveProgress();
+      renderBattleScreen();
+
+      state.pendingTimer = window.setTimeout(() => {
+        if (state.monster.hp <= 0) {
+          finishBattle(true);
+          return;
+        }
+
+        if (player.hp <= 0 || state.taskIndex >= state.totalTasks) {
+          finishBattle(false);
+          return;
+        }
+
+        state.feedback = "Новое задание!";
+        nextQuestion();
+        renderBattleScreen();
+      }, 850);
+    }
+
+    function handleRaceAnswer(answer) {
+      if (state.inputLocked) {
+        return;
+      }
+
+      const player = getActivePlayer();
+      const question = state.currentQuestion;
+      const correct = answer === question.answer;
+
+      state.inputLocked = true;
+      state.selectedAnswer = answer;
+      state.revealAnswers = true;
+      state.taskIndex += 1;
+
+      if (correct) {
+        player.score += 10;
+        state.sessionScore = player.score;
+        state.sessionCorrect += 1;
+        progress.correctAnswers += 1;
+        registerCategoryProgress(question.category);
+        state.race.currentSteps = Math.min(state.race.finishSteps, state.race.currentSteps + 1);
+        state.feedback = "Отлично! Машинка едет вперёд!";
+        playSound("correct");
+        animateNode(dom.raceQuestionCard, "flash-correct");
+        animateNode(dom.raceCar, "car-boost");
+      } else {
+        state.sessionMistakes += 1;
+        progress.mistakes += 1;
+        state.feedback = "Почти! Машинка не остановилась, едем дальше.";
+        playSound("wrong");
+        animateNode(dom.raceQuestionCard, "flash-error");
+      }
+
+      collectAchievements();
+      saveProgress();
+      renderRaceScreen();
+
+      state.pendingTimer = window.setTimeout(() => {
+        if (state.race.currentSteps >= state.race.finishSteps) {
+          finishRace(true);
+          return;
+        }
+
+        if (state.taskIndex >= state.totalTasks) {
+          finishRace(false);
+          return;
+        }
+
+        state.feedback = "Следующий вопрос!";
+        nextQuestion();
+        renderRaceScreen();
+      }, 850);
+    }
+
+    function registerCategoryProgress(category) {
+      if (category === "letters") {
+        progress.categoryCorrect.letters += 1;
+      }
+      if (category === "numbers") {
+        progress.categoryCorrect.numbers += 1;
+      }
+    }
+
+    function collectAchievements(context = {}) {
+      const fresh = [];
+
+      maybeUnlock("tenCorrect", progress.correctAnswers >= 10, fresh);
+      maybeUnlock("lettersMaster", progress.categoryCorrect.letters >= 8, fresh);
+      maybeUnlock("numbersMaster", progress.categoryCorrect.numbers >= 8, fresh);
+      maybeUnlock("firstMonster", Boolean(context.battleWon), fresh);
+      maybeUnlock("racer", Boolean(context.raceWon), fresh);
+
+      fresh.forEach((id) => {
+        if (!state.lastUnlocked.includes(id)) {
+          state.lastUnlocked.push(id);
+        }
+      });
+    }
+
+    function maybeUnlock(id, condition, freshList) {
+      if (!condition || progress.achievements.includes(id)) {
+        return;
+      }
+
+      progress.achievements.push(id);
+      freshList.push(id);
+    }
+
+    function finishBattle(success) {
+      clearPendingTimer();
+      stopSpeech();
+      const player = getActivePlayer();
+      progress.bestScore = Math.max(progress.bestScore, player.score);
+
+      if (success) {
+        progress.levelsCompleted += 1;
+        progress.battleLevel += 1;
+        collectAchievements({ battleWon: true });
+        playSound("victory");
+        state.result = {
+          success: true,
+          emoji: "🎉",
+          title: "Монстр побеждён!",
+          text: "Ты отлично справился и помог герою пройти дальше.",
+          nextLabel: `Следующий уровень: ${progress.battleLevel}`
+        };
+      } else {
+        state.result = {
+          success: false,
+          emoji: "💛",
+          title: "Давай попробуем ещё раз!",
+          text: "Монстрик ещё остался на поле, но ты уже молодец. Попробуй ещё раз, ты справишься!",
+          nextLabel: `Повторить уровень ${state.level}`
+        };
+      }
+
+      saveProgress();
+      renderResultScreen();
+      setScreen("result");
+    }
+
+    function finishRace(success) {
+      clearPendingTimer();
+      stopSpeech();
+      const player = getActivePlayer();
+      progress.bestScore = Math.max(progress.bestScore, player.score);
+
+      if (success) {
+        progress.levelsCompleted += 1;
+        progress.raceLevel += 1;
+        collectAchievements({ raceWon: true });
+        playSound("victory");
+        state.result = {
+          success: true,
+          emoji: "🏁",
+          title: "Ты доехал до финиша!",
+          text: "Машинка пересекла финишную линию. Отличная гонка!",
+          nextLabel: `Следующая трасса: ${progress.raceLevel}`
+        };
+      } else {
+        state.result = {
+          success: false,
+          emoji: "🚗",
+          title: "Ещё один заезд?",
+          text: "Финиш уже близко. Давай попробуем ещё раз и доедем до конца!",
+          nextLabel: `Повторить трассу ${state.level}`
+        };
+      }
+
+      saveProgress();
+      renderResultScreen();
+      setScreen("result");
+    }
+
+    function renderResultScreen() {
+      const player = getActivePlayer();
+      const result = state.result;
+
+      dom.resultEmoji.textContent = result.emoji;
+      dom.resultTitle.textContent = result.title;
+      dom.resultText.textContent = result.text;
+      dom.nextLevelBtn.textContent = result.nextLabel;
+      dom.retryBtn.textContent = result.success ? "Сыграть ещё раз" : "Попробовать ещё раз";
+      dom.nextLevelBtn.classList.toggle("hidden", !result.success);
+
+      const resultCards = [
+        { label: "Очки", value: player.score },
+        { label: "Правильных", value: state.sessionCorrect },
+        { label: "Ошибок", value: state.sessionMistakes },
+        { label: state.gameType === "race" ? "Трасса" : "Уровень", value: state.level }
+      ];
+
+      dom.resultGrid.innerHTML = resultCards.map((card) => `
+        <div class="result-box">
+          <strong>${card.label}</strong>
+          <span>${card.value}</span>
+        </div>
+      `).join("");
+
+      const newItems = ACHIEVEMENTS.filter((achievement) => state.lastUnlocked.includes(achievement.id));
+      dom.newAchievements.classList.toggle("hidden", newItems.length === 0);
+      dom.newAchievementsGrid.innerHTML = newItems.map((achievement) => `
+        <div class="achievement-card">
+          <span class="emoji">${achievement.emoji}</span>
+          <strong>${achievement.title}</strong>
+          <p>${achievement.description}</p>
+        </div>
+      `).join("");
+    }
+
+    function restartCurrentGame() {
+      startGame(state.gameType, state.mode);
+    }
+
+    function continueAfterResult() {
+      if (!state.result) {
+        return;
+      }
+      startGame(state.gameType, state.mode);
+    }
+
+    function animateNode(node, className) {
+      node.classList.remove(className);
+      void node.offsetWidth;
+      node.classList.add(className);
+      window.setTimeout(() => node.classList.remove(className), 700);
+    }
+
+    function ensureAudio() {
+      if (!audioContext) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) {
+          return null;
+        }
+        audioContext = new AudioContextClass();
+      }
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+      return audioContext;
+    }
+
+    function playSound(type) {
+      const context = ensureAudio();
+      if (!context) {
+        return;
+      }
+
+      const now = context.currentTime;
+      const noteMap = {
+        correct: [523.25, 659.25],
+        wrong: [261.63, 220],
+        victory: [523.25, 659.25, 783.99]
+      };
+
+      noteMap[type].forEach((frequency, index) => {
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+
+        oscillator.type = type === "wrong" ? "sine" : "triangle";
+        oscillator.frequency.value = frequency;
+
+        gain.gain.setValueAtTime(0.0001, now + index * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.08, now + index * 0.12 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.12 + 0.18);
+
+        oscillator.connect(gain);
+        gain.connect(context.destination);
+        oscillator.start(now + index * 0.12);
+        oscillator.stop(now + index * 0.12 + 0.2);
+      });
+    }
+
+    function resetProgress() {
+      const confirmed = window.confirm("Сбросить весь прогресс игры?");
+      if (!confirmed) {
+        return;
+      }
+
+      clearPendingTimer();
+      stopSpeech();
+      progress = createDefaultProgress();
+      saveProgress();
+      setCloudStatus(
+        isCloudReady()
+          ? "Локальный прогресс сброшен. Он отправится в облако при следующем сохранении."
+          : "Локальный прогресс сброшен."
+      );
+      renderHomeStats();
+      renderModeLevels();
+      renderStatsScreen();
+    }
+
+    function bindEvents() {
+      dom.startGameBtn.addEventListener("click", showModeScreen);
+      dom.startStatsBtn.addEventListener("click", openStats);
+      dom.headerStatsBtn.addEventListener("click", openStats);
+      dom.headerMenuBtn.addEventListener("click", goToMenu);
+      dom.setupCloudBtn.addEventListener("click", configureCloudProfile);
+      dom.cloudLoadBtn.addEventListener("click", () => loadProgressFromCloud());
+      dom.cloudSaveBtn.addEventListener("click", () => syncProgressToCloud());
+      dom.modeBackBtn.addEventListener("click", goToMenu);
+      dom.battleMenuBtn.addEventListener("click", goToMenu);
+      dom.raceMenuBtn.addEventListener("click", goToMenu);
+      dom.resultMenuBtn.addEventListener("click", goToMenu);
+      dom.statsMenuBtn.addEventListener("click", goToMenu);
+      dom.resetProgressBtn.addEventListener("click", resetProgress);
+      dom.retryBtn.addEventListener("click", restartCurrentGame);
+      dom.nextLevelBtn.addEventListener("click", continueAfterResult);
+      dom.battleSpeakBtn.addEventListener("click", () => speakQuestion(state.currentQuestion, true));
+      dom.raceSpeakBtn.addEventListener("click", () => speakQuestion(state.currentQuestion, true));
+
+      dom.modeCards.forEach((button) => {
+        button.addEventListener("click", () => {
+          startGame(button.dataset.game, button.dataset.mode);
+        });
+      });
+
+      ["click", "touchstart", "keydown"].forEach((eventName) => {
+        window.addEventListener(eventName, ensureAudio, { once: true });
+      });
+    }
+
+    function init() {
+      bindEvents();
+      renderHomeStats();
+      renderCloudPanels();
+      renderModeLevels();
+      renderStatsScreen();
+      setScreen("start");
+    }
+
+    init();
+  </script>
+</body>
+</html>
